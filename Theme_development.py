@@ -173,4 +173,4 @@ class Farbschema:
                                "}")
 
 
-default = Farbschema()
+developer = Farbschema()

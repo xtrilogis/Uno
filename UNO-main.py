@@ -103,7 +103,7 @@ class UiStartWindow(QMainWindow):
     def changeTheme(self):
         global THEME
         if THEME == dark_blue:
-            THEME = default
+            THEME = developer
         else:
             THEME = dark_blue
         self.setTheme()
