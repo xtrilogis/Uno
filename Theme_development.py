@@ -1,41 +1,40 @@
 class Farbschema:
     def __init__(self):
         # ##### VALUES ############################################################################### #
-        self.backgroundColor = "qlineargradient(spread:pad, x1:0.0797727, y1:0.914, x2:0.914773, y2:0.08, " \
-                               "stop:0.0568182 rgba(28, 40, 54, 255), stop:0.960227 rgba(63, 88, 119, 255)) "
+        self.backgroundColor = "rgb(217, 198, 255);"
 
         # ## COLORS ## #
         # Basics
-        self.buttonBasicColor = "rgb(217, 91, 19)"
-        self.buttonActiveColor = "rgb(247, 94, 0)"
-        self.buttonPassiveColor = "rgb(158, 89, 48)"
-        self.buttonFocusColor = "rgb(245, 125, 5)"
+        self.buttonBasicColor = "rgb(184, 101, 162)"
+        self.buttonActiveColor = "rgb(255, 35, 152)"
+        self.buttonPassiveColor = "rgb(186, 26, 111)"
+        self.buttonFocusColor = "rgb(177, 90, 173)"
 
         # First 'Screen'
-        self.labelTitelColor = "rgb(99, 140, 186)"
-        self.labelSubtitelColor = "rgb(74, 105, 138);"
+        self.labelTitelColor = "rgb(105, 163, 255)"
+        self.labelSubtitelColor = "rgb(123, 132, 255)"
         self.labelInfoColor = "rgb(152, 166, 202)"
 
         # Second 'Screen'
-        self.buttonsEntryColor = "rgb(135, 230, 195)"
-        self.spinBoxColorColor = "rgb(208, 255, 246)"
-        self.lineEditColor = "rgb(158, 176, 218)"
-        self.labelEntryColor = "rgb(192, 209, 255)"
-        self.chooseColor = "rgb(135, 186, 167)"
+        self.buttonsEntryColor = "rgb(162, 255, 216)"
+        self.spinBoxColor = "rgb(208, 255, 246)"
+        self.lineEditColor = "rgb(182, 166, 214)"
+        self.labelEntryColor = "rgb(0, 0, 0)"
+        self.chooseColor = "rgb(225, 124, 200)"
 
         # Third 'Screen' | Main Window
-        # Card Colors
-        self.blau = "rgb(96, 130, 226)"
-        self.rot = "rgb(202, 77, 77)"
-        self.green = "rgb(43, 191, 43)"
-        self.gelb = "rgb(217, 191, 62)"
+        # ## Card Colors
+        self.blau = "rgb(125, 177, 255)"
+        self.rot = "rgb(255, 165, 138)"
+        self.green = "rgb(169, 255, 149)"
+        self.gelb = "rgb(238, 226, 137)"
         self.black = "rgb(72, 71, 72)"
 
-        # Card Border Colors
-        self.borderNormalColor = "rgb(172, 187, 191)"
-        self.borderPlayColor = "rgb(150, 255, 215)"
+        # ## Card Border Colors
+        self.borderNormalColor = "rgb(255, 255, 255)"
+        self.borderPlayColor = "rgb(211, 112, 218)"
 
-        # Card Value Picture
+        # ## Card Value Picture
         self.filePath = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/"
 
         # Default colors for the Players
@@ -48,8 +47,8 @@ class Farbschema:
         self.windowRadius = "15px"
 
         # Second 'Screen'
-        self.basicButtonRadius = "17px"
-        self.startButtonRadius = "20px"
+        self.basicButtonRadius = "15px"
+        self.startButtonRadius = "15px"
         self.entryRadius = "10px"
 
         # Third 'Screen'
@@ -71,33 +70,33 @@ class Farbschema:
         self.windowBackgroundGame = ("QFrame {\n"
                                      f"    background-color: {self.backgroundColor};\n"
                                      "}")
-        # ### First 'Screen'
+
+        # First 'Screen'
         self.titelLabel = (f"{self.frameBackground}\n"
                            f"color: {self.labelTitelColor};")
         self.descriptionLabel = (f"{self.frameBackground}\n"
                                  f"color: {self.labelSubtitelColor};")
         self.startButton = ("QPushButton {\n"
-                            f"    background-color: {self.buttonActiveColor};\n"
-                            f"    border-radius: {self.startButtonRadius};\n"
+                            f"    background-color: {self.startButtonRadius};\n"
+                            f"    border-radius: {self.buttonActiveColor};\n"
                             "}")
         self.infoLabel = f"color: {self.labelInfoColor};"
 
-        # Prepare
-        self.entryLabels = (f"{self.frameBackground}\n"
-                            f"color: {self.labelEntryColor}")
-
+        # Second 'Screen'
+        self.entryLabel = (f"{self.frameBackground}\n"
+                           f"color: {self.labelEntryColor}")
         self.pulsMinus = ("QPushButton {\n"
                           f"    background-color: {self.buttonsEntryColor};\n"
                           f"    border-radius: {self.entryRadius};\n"
                           "}")
         self.spinBox = ("QSpinBox {\n"
-                        f"    background-color: {self.spinBoxColorColor};\n"
+                        f"    background-color: {self.spinBoxColor};\n"
                         f"    border-radius: {self.entryRadius};\n"
-                        "}\n")
+                        "}")
 
-        self.NameEntry = ("QLineEdit {\n"
-                          f"    background-color: {self.lineEditColor};\n"
-                          f"    border-radius: {self.entryRadius};\n"
+        self.nameEntry = ("QLineEdit {\n"
+                          f"    border-radius: {self.lineEditColor};\n"
+                          f"    background-color: {self.entryRadius};\n"
                           "}")
         self.colorButton = ("QPushButton {\n"
                             f"    background-color: {self.chooseColor};\n"
@@ -111,23 +110,23 @@ class Farbschema:
                          "}\n")
 
         self.buttonPassive = ("QPushButton {\n"
-                              f"    background-color: {self.buttonPassiveColor};\n"
                               f"    border-radius: {self.startButtonRadius};\n"
+                              f"    background-color: {self.buttonPassiveColor};\n"
                               "}")
         # = startButton
         self.buttonActive = self.startButton
         self.theme_Reset = ("QPushButton {\n"
-                            f"    background-color: {self.buttonBasicColor};\n"
                             f"    border-radius: {self.basicButtonRadius};\n"
+                            f"    background-color: {self.buttonBasicColor};\n"
                             "}")
 
-        # Spiel
+        # Third 'Screen'
         self.currentPlayerName = f"color: {self.labelEntryColor}"
-        self.uno_SkipButton = ("QPushButton {\n"
-                               f"    background-color: {self.buttonFocusColor};\n"
+        self.uno_skipButton = ("QPushButton {\n"
+                               f"    background-color: {self.buttonBasicColor};\n"
                                f"    border-radius: {self.entryRadius}\n"
                                "}")
-        self.unoButtonClicked = ("QPushButton {\n"
+        self.unoButtonclicked = ("QPushButton {\n"
                                  f"    background-color: {self.buttonPassiveColor};\n"
                                  f"    border-radius: {self.entryRadius}\n"
                                  "}")
@@ -137,13 +136,13 @@ class Farbschema:
                                      "    border-width: 3px; \n"
                                      "    border-style: solid;\n"
                                      f"    border-color: {self.borderPlayColor};"
-                                     f"     image: url({self.filePath}default.png);\n "
+                                     f"    image: url({self.filePath}default.png);\n "
                                      "}")
-        self.normalDrawTalon = ("QPushButton {\n"
-                                "    background-color: {self.};\n"
-                                "    border-radius: 15px;\n"
-                                f"   image: url({self.filePath}default.png);\n "
-                                "}")
+        self.drawTalon = ("QPushButton {\n"
+                          "    background-color: rgb(72, 71, 72);\n"
+                          "border-radius: 15px;\n"
+                          f"image: url({self.filePath}default.png);\n "
+                          "}")
 
         self.blueChoice = ("QPushButton {\n"
                            f"    background-color: {self.blau};\n"
@@ -162,16 +161,16 @@ class Farbschema:
                           f"    {self.colorChoiceRadius}"
                           "}")
 
-        # Ende
+        # Forth 'Screen'
         self.endMessage = self.titelLabel
-        self.playButton = ("QPushButton {\n"
-                           f"    background-color: {self.buttonFocusColor};\n"
-                           f"    border-radius: {self.endButtonRadius}\n"
-                           "}")
-        self.menu_QuitButton = ("QPushButton {\n"
-                                f"    background-color: {self.buttonBasicColor};\n"
-                                f"    border-radius: {self.endButtonRadius}\n"
-                                "}")
+        self.playButton = (("QPushButton {\n"
+                            f"    background-color: {self.buttonFocusColor};\n"
+                            f"    border-radius: {self.endButtonRadius}\n"
+                            "}"))
+        self.menuQuitButton = ("QPushButton {\n"
+                               f"    background-color: {self.buttonBasicColor};\n"
+                               f"    border-radius: {self.endButtonRadius}\n"
+                               "}")
 
 
-dark_blue = Farbschema()
+default = Farbschema()

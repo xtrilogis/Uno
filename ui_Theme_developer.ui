@@ -147,6 +147,9 @@
           <family>Yu Gothic UI Light</family>
          </font>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(186, 111, 144);</string>
+        </property>
         <property name="text">
          <string>by Jules und dem WWW</string>
         </property>

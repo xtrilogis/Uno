@@ -5,7 +5,7 @@ from PyQt5.QtGui import QColor
 from ui_Preparescreen import *
 from ui_Basic_Spielscreen import *
 from ui_Endscreen import *
-from defaultTheme import *
+from Theme_development import *
 from Theme_dark_blue import *
 
 """ to do: Stylesheet änderungen flexibler"""

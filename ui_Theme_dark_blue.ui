@@ -70,7 +70,7 @@
        <number>40</number>
       </property>
       <item>
-       <widget class="QPushButton" name="pushButtonColorTheme">
+       <widget class="QPushButton" name="pushButtonTheme">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -246,7 +246,7 @@ color: rgb(99, 140, 186);</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <widget class="QLabel" name="labelAnzahl">
+       <widget class="QLabel" name="labelQuantity">
         <property name="font">
          <font>
           <family>Yu Gothic UI Semilight</family>
@@ -324,7 +324,7 @@ color: rgb(99, 140, 186);</string>
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QSpinBox" name="spinBoxNumber">
+       <widget class="QSpinBox" name="spinBoxQuantity">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -392,7 +392,7 @@ color: rgb(99, 140, 186);</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QLabel" name="labelSpieler1">
+       <widget class="QLabel" name="labelPlayerEntry">
         <property name="font">
          <font>
           <family>Yu Gothic UI Semilight</family>
@@ -408,7 +408,7 @@ color: rgb(99, 140, 186);</string>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEditSpieler1">
+       <widget class="QLineEdit" name="lineEditPlayerEntry">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -442,7 +442,7 @@ color: rgb(99, 140, 186);</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButtonSetColor">
+       <widget class="QPushButton" name="pushButtonPlayerColor">
         <property name="minimumSize">
          <size>
           <width>80</width>
@@ -468,7 +468,7 @@ color: rgb(99, 140, 186);</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_SpielerEnter">
+       <widget class="QPushButton" name="pushButtonPlayerReturn">
         <property name="minimumSize">
          <size>
           <width>40</width>
@@ -567,7 +567,7 @@ color: rgb(99, 140, 186);</string>
       <string>Start</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButtonWeiter">
+    <widget class="QPushButton" name="pushButtonNext">
      <property name="geometry">
       <rect>
        <x>220</x>
