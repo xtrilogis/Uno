@@ -4,7 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
         """
-        self.frameBackground.setStyleSheet("QFrame {\n"
+        self.transperantBackground.setStyleSheet("QFrame {\n"
 "    background-color: rgb(17, 198, 255);\n"
 "    border-radius: 15px;\n"
 "}")

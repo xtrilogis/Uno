@@ -8,20 +8,20 @@ from ui_Endscreen import *
 from Theme_development import *
 from Theme_dark_blue import *
 
-""" to do: Stylesheet änderungen flexibler"""
+
+"Pfad als Relation vom Projekt ordner"
 # ### GLOBALS ### #
 FARBEN = ["Blau", "Rot", "Grün", "Gelb"]
 WERTE = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 DRAW_TALON = []
 PLAY_TALON = []
 PLAYERS = []
-# P_COLORS = ["rgb(150, 129, 212)", "rgb(61, 198, 213)", "rgb(67, 190, 40)", "rgb(59, 216, 230)", "rgb(230, 198, 30)",
-# "rgb(230, 37, 170)"]
 Gewinner = None
-# THEME = default
-THEME = dark_blue
 
+# Basic Start Theme
+THEME = name
 
+# ### First + Second 'Screen' ### #
 class UiStartWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -40,65 +40,67 @@ class UiStartWindow(QMainWindow):
         self.shadow.setXOffset(0)
         self.shadow.setYOffset(0)
         self.shadow.setColor(QColor(0, 0, 0, 60))
-        self.ui.frameBackground.setGraphicsEffect(self.shadow)
-        self.ui.pushButtonStart.setGraphicsEffect(self.shadow)
+        self.ui.frame_Background.setGraphicsEffect(self.shadow)
+        self.ui.pushButton_Start.setGraphicsEffect(self.shadow)
 
         # entfernt alles außer dem Frame
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         # ### Needed ### #
-
         self.prepare_game()
 
         # ### BUTTON CONNECT ### #
-        self.ui.pushButtonStart.clicked.connect(self.startPushed)
-        self.ui.pushButtonClose.clicked.connect(self.close)
+        self.ui.pushButton_Start.clicked.connect(self.startPushed)
+        self.ui.pushButton_Close.clicked.connect(self.close)
 
-        self.ui.pushButtonWeiter.clicked.connect(self.weiterPushed)
-        self.ui.pushButtonReset.clicked.connect(self.reset_entry)
-        self.ui.pushButtonSetColor.clicked.connect(self.showColorDialog)
-        self.ui.pushButton_SpielerEnter.clicked.connect(self.spielernamen)
-        self.ui.pushButtonColorTheme.clicked.connect(self.changeTheme)
+        self.ui.pushButton_Next.clicked.connect(self.weiterPushed)
+        self.ui.pushButton_Reset.clicked.connect(self.reset_entry)
+        self.ui.pushButton_SelectColor.clicked.connect(self.showColorDialog)
+        self.ui.pushButton_ReturnEntry.clicked.connect(self.spielernamen)
+        self.ui.pushButton_Theme.clicked.connect(self.changeTheme)
 
     def hidePre(self):
-        self.ui.frameSpieleranzahl.hide()
-        self.ui.frameSpieler1.hide()
-        self.ui.pushButtonReset.hide()
-        self.ui.pushButtonWeiter.hide()
-        self.ui.pushButtonColorTheme.hide()
-        self.ui.labelErgebnis.hide()
+        self.ui.frame_PlayerQuantity.hide()
+        self.ui.frame_PlayerEntry.hide()
+        self.ui.pushButton_Reset.hide()
+        self.ui.pushButton_Next.hide()
+        self.ui.pushButton_Theme.hide()
+        self.ui.label_Result.hide()
 
     def show_start(self):
-        self.ui.pushButtonStart.show()
-        self.ui.labelUNO.show()
-        self.ui.labelDescription.show()
+        self.ui.pushButton_Start.show()
+        self.ui.label_Title.show()
+        self.ui.label_Subtitle.show()
 
     def setTheme(self):
-        self.ui.frameBackground.setStyleSheet(THEME.backgroundstyle)
-        self.ui.frameClose.setStyleSheet(THEME.frameBackground)
-        self.ui.frameSpieleranzahl.setStyleSheet(THEME.frameBackground)
-        self.ui.frameSpieler1.setStyleSheet(THEME.frameBackground)
-        self.ui.frameReset.setStyleSheet(THEME.frameBackground)
-        self.ui.frameWeiter.setStyleSheet(THEME.frameBackground)
+        self.ui.frame_Background.setStyleSheet(THEME.windowBackground_Style)
+        self.ui.frame_Close.setStyleSheet(THEME.transparentBackground)
+        
+        self.ui.frame_NextScreen.setStyleSheet(THEME.transparentBackground)
+        self.ui.pushButton_Start.setStyleSheet(THEME.mainButton_Style)
+        self.ui.pushButton_Next.setStyleSheet(THEME.passiveButton_Style)
+        
+        self.ui.label_Title.setStyleSheet(THEME.titelLabel_Style)
+        self.ui.label_Subtitle.setStyleSheet(THEME.subtitleLabel_Style)
+        self.ui.label_Info.setStyleSheet(THEME.infoLabel_Style)
 
-        self.ui.labelUNO.setStyleSheet(THEME.UNOLabel)
-        self.ui.labelDescription.setStyleSheet(THEME.DescriptionLabel)
-        self.ui.pushButtonStart.setStyleSheet(THEME.StartButton)
-        self.ui.labelinfo.setStyleSheet(THEME.infoLabel)
+        self.ui.frame_PlayerQuantity.setStyleSheet(THEME.transparentBackground)
+        self.ui.label_Quantity.setStyleSheet(THEME.entryLabels_Style)
+        self.ui.pushButton_QuantityPlus.setStyleSheet(THEME.pulsMinusButton_Style)
+        self.ui.pushButton_QuantityMinus.setStyleSheet(THEME.pulsMinusButton_Style)
+        self.ui.spinBox_Quantity.setStyleSheet(THEME.spinBox_Style)
 
-        self.ui.labelAnzahl.setStyleSheet(THEME.AnzahlLabel)
-        self.ui.pushButton_plus.setStyleSheet(THEME.PulsMinus)
-        self.ui.pushButton_minus.setStyleSheet(THEME.PulsMinus)
-        self.ui.spinBoxNumber.setStyleSheet(THEME.spinBox)
-        self.ui.labelSpieler1.setStyleSheet(THEME.NameLabel)
-        self.ui.lineEditSpieler1.setStyleSheet(THEME.NameEingabe)
-        self.ui.pushButtonSetColor.setStyleSheet(THEME.colorButton)
-        self.ui.pushButton_SpielerEnter.setStyleSheet(THEME.okButton)
-        self.ui.labelErgebnis.setStyleSheet(THEME.AnzahlLabel)
-        self.ui.pushButtonWeiter.setStyleSheet(THEME.weiterBPassiv)
-        self.ui.pushButtonColorTheme.setStyleSheet(THEME.theme_Reset)
-        self.ui.pushButtonReset.setStyleSheet(THEME.theme_Reset)
+        self.ui.frame_PlayerEntry.setStyleSheet(THEME.transparentBackground)
+        self.ui.label_Entry.setStyleSheet(THEME.entryLabels_Style)
+        self.ui.lineEdit_EnterName.setStyleSheet(THEME.playerNameEntry_Style)
+        self.ui.pushButton_SelectColor.setStyleSheet(THEME.colorButton_Style)
+        self.ui.pushButton_ReturnEntry.setStyleSheet(THEME.okButton_Style)
+        self.ui.label_Result.setStyleSheet(THEME.entryLabels_Style)
+
+        self.ui.frame_ResetThemeInfo.setStyleSheet(THEME.transparentBackground)
+        self.ui.pushButton_Reset.setStyleSheet(THEME.theme_ResetButton_Style)
+        self.ui.pushButton_Theme.setStyleSheet(THEME.theme_ResetButton_Style)
 
     def changeTheme(self):
         global THEME
@@ -108,26 +110,26 @@ class UiStartWindow(QMainWindow):
             THEME = dark_blue
         self.setTheme()
 
-        if len(PLAYERS) == self.ui.spinBoxNumber.value():
-            self.ui.pushButtonWeiter.setStyleSheet(THEME.weiterBAktiv)
+        if len(PLAYERS) == self.ui.spinBox_Quantity.value():
+            self.ui.pushButton_Next.setStyleSheet(THEME.mainButton_Style)
 
     def prepare_game(self):
         """ setzt SpinBox Minimum auf 2 & Label: Spieler 1"""
-        self.ui.spinBoxNumber.setMinimum(2)
-        self.ui.labelSpieler1.setText(f"Spieler {self.counter}:")
+        self.ui.spinBox_Quantity.setMinimum(2)
+        self.ui.label_Entry.setText(f"Spieler {self.counter}:")
 
     # ### BUTTON AUFRUFE ### #
     def startPushed(self):
         """versteckt den Start-Screen, lässt Spieler-Eingaben erscheinen"""
-        self.ui.pushButtonStart.hide()
-        self.ui.labelUNO.hide()
-        self.ui.labelDescription.hide()
+        self.ui.pushButton_Start.hide()
+        self.ui.label_Title.hide()
+        self.ui.label_Subtitle.hide()
 
-        self.ui.frameSpieleranzahl.show()
-        self.ui.frameSpieler1.show()
-        self.ui.pushButtonReset.show()
-        self.ui.pushButtonWeiter.show()
-        self.ui.pushButtonColorTheme.show()
+        self.ui.frame_PlayerQuantity.show()
+        self.ui.frame_PlayerEntry.show()
+        self.ui.pushButton_Reset.show()
+        self.ui.pushButton_Next.show()
+        self.ui.pushButton_Theme.show()
 
     def spielernamen(self):
         """fügt die eingegebenen Namen der liste hinzu.
@@ -137,61 +139,63 @@ class UiStartWindow(QMainWindow):
         wenn counter = Spielerzahl: Button&LineEdit verschwinden, Label zeigt die Liste der Spieler
             der weiter Button bekommt eine neu Farbe "wird aktiviert" """
         global PLAYERS
-        self.ui.labelErgebnis.hide()
-        PLAYERS.append(Spieler(name=self.ui.lineEditSpieler1.text(), handkarten=[], farbe=THEME.P_COLORS[0]))
-        THEME.P_COLORS.append(THEME.P_COLORS.pop(0))
-        self.ui.lineEditSpieler1.clear()
+        self.ui.label_Result.hide()
+        PLAYERS.append(Spieler(name=self.ui.lineEdit_EnterName.text(),
+                               handkarten=[],
+                               farbe=THEME.defaultPlayerColors[0]))
+        THEME.defaultPlayerColors.append(THEME.defaultPlayerColors.pop(0))
+        self.ui.lineEdit_EnterName.clear()
 
-        if len(PLAYERS) < self.ui.spinBoxNumber.value():
+        if len(PLAYERS) < self.ui.spinBox_Quantity.value():
             self.counter += 1
-            self.ui.labelSpieler1.setText(f"Spieler {self.counter}:")
+            self.ui.label_Entry.setText(f"Spieler {self.counter}:")
         else:
-            self.ui.pushButton_SpielerEnter.hide()
-            self.ui.pushButtonSetColor.hide()
-            self.ui.lineEditSpieler1.hide()
+            self.ui.pushButton_ReturnEntry.hide()
+            self.ui.pushButton_SelectColor.hide()
+            self.ui.lineEdit_EnterName.hide()
 
-            self.ui.labelSpieler1.setText(f"{len(PLAYERS)} Spieler")
-            self.ui.pushButtonWeiter.setStyleSheet(THEME.weiterBAktiv)
+            self.ui.label_Entry.setText(f"{len(PLAYERS)} Spieler")
+            self.ui.pushButton_Next.setStyleSheet(THEME.mainButton_Style)
 
     def showColorDialog(self):
         selected_color = QColorDialog.getColor()
         if selected_color.isValid():
-            THEME.P_COLORS.insert(0, f"rgb{selected_color.getRgb()}")
+            THEME.defaultPlayerColors.insert(0, f"rgb{selected_color.getRgb()}")
 
     def weiterPushed(self):
         """Wenn jeder Spieler (len(Players)==SpinBox) einen Namen eingegeben hat, wird das Spielfenster geöffnet
 
         sonst wird um Eingabe gebeten."""
-        if len(PLAYERS) == self.ui.spinBoxNumber.value():
+        if len(PLAYERS) == self.ui.spinBox_Quantity.value():
             self.spielFenster = UiSpielFenster()
             self.spielFenster.show()
 
             self.close()
         else:
-            self.ui.labelSpieler1.setText(f"Spieler {self.counter}:")
-            self.ui.lineEditSpieler1.show()
-            self.ui.pushButtonSetColor.show()
-            self.ui.pushButton_SpielerEnter.show()
+            self.ui.label_Entry.setText(f"Spieler {self.counter}:")
+            self.ui.lineEdit_EnterName.show()
+            self.ui.pushButton_SelectColor.show()
+            self.ui.pushButton_ReturnEntry.show()
             if len(PLAYERS) == 0:
                 text = f"Zu wenig Spieler! Noch kein Spielername eingegeben."
             else:
                 text = f"Zu wenig Spieler! Nur {len(PLAYERS)} Spielername(n) eingegeben."
-            self.ui.labelErgebnis.show()
-            self.ui.labelErgebnis.setText(str(text))
+            self.ui.label_Result.show()
+            self.ui.label_Result.setText(str(text))
 
     def reset_entry(self):
         """Setzt alle Eingabefelder zurück"""
         global PLAYERS
         PLAYERS = []
-        self.ui.spinBoxNumber.setValue(2)
-        self.ui.pushButton_SpielerEnter.show()
-        self.ui.lineEditSpieler1.show()
-        self.ui.pushButtonSetColor.show()
-        self.ui.pushButtonWeiter.setStyleSheet(THEME.weiterBPassiv)
+        self.ui.spinBox_Quantity.setValue(2)
+        self.ui.pushButton_ReturnEntry.show()
+        self.ui.lineEdit_EnterName.show()
+        self.ui.pushButton_SelectColor.show()
+        self.ui.pushButton_Next.setStyleSheet(THEME.passiveButton_Style)
         self.counter = 1
         self.prepare_game()
 
-
+# ### Third 'Screen' ### #
 class UiSpielFenster(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -201,9 +205,11 @@ class UiSpielFenster(QMainWindow):
         # später im Preparescreen
         # spieler_preset()
 
+        self.pfad = THEME.filePath ## to-do
+
         # Variablen
         self.titel = "UNO - The Game"
-        self.icon = 'D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/icon.png'
+        self.icon = f'{self.pfad}icon.png'
 
         # ?? self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
@@ -245,21 +251,22 @@ class UiSpielFenster(QMainWindow):
 
     def setTheme(self):
         # Frames
-        self.ui.frameHintergrund.setStyleSheet(THEME.backgroundstyleSpiel)
-        self.ui.frame_Stapel.setStyleSheet(THEME.frameBackground)
-        self.ui.frame_Handkarten.setStyleSheet(THEME.frameBackground)
-        self.ui.framePassen.setStyleSheet(THEME.frameBackground)
-        self.ui.frameFarbwahl.setStyleSheet(THEME.frameBackground)
-        self.ui.frameLeftLast.setStyleSheet(THEME.frameBackground)
-        self.ui.frameRightNext.setStyleSheet(THEME.frameBackground)
-        self.ui.frameTop.setStyleSheet(THEME.frameBackground)
+        self.ui.frameHintergrund.setStyleSheet(THEME.gameWindowBackground_Style)
+        self.ui.frame_Stapel.setStyleSheet(THEME.transparentBackground)
+        self.ui.frame_Handkarten.setStyleSheet(THEME.transparentBackground)
+        self.ui.framePassen.setStyleSheet(THEME.transparentBackground)
+        self.ui.frameFarbwahl.setStyleSheet(THEME.transparentBackground)
+        self.ui.frameLeftLast.setStyleSheet(THEME.transparentBackground)
+        self.ui.frameRightNext.setStyleSheet(THEME.transparentBackground)
+        self.ui.frameTop.setStyleSheet(THEME.transparentBackground)
 
-        self.ui.pushButtonWeiter.setStyleSheet(THEME.UNOButton)
-        self.ui.pushButtonUNO.setStyleSheet(THEME.UNOButton)
-        self.ui.pushButtonBlau.setStyleSheet(THEME.blueChoice)
-        self.ui.pushButtonGruen.setStyleSheet(THEME.greenChoice)
-        self.ui.pushButtonGelb.setStyleSheet(THEME.gelbChoice)
-        self.ui.pushButtoRot.setStyleSheet(THEME.rotChoice)
+            # weiter zu Skip
+        self.ui.pushButtonWeiter.setStyleSheet(THEME.uno_SkipButton_Style)
+        self.ui.pushButtonUNO.setStyleSheet(THEME.uno_SkipButton_Style)
+        self.ui.pushButtonBlau.setStyleSheet(THEME.blueChoice_Style)
+        self.ui.pushButtonGruen.setStyleSheet(THEME.greenChoice_Style)
+        self.ui.pushButtonGelb.setStyleSheet(THEME.gelbChoice_Style)
+        self.ui.pushButtoRot.setStyleSheet(THEME.rotChoice_Style)
 
         # self.ui.LabelSpielername.setStyleSheet(THEME.aktuellerSp)
 
@@ -388,10 +395,10 @@ class UiSpielFenster(QMainWindow):
 
         Wenn der Spieler keine Karte spielen kann wir das Label geändert und DRAW_Talon bekommt einen Rahmen"""
         if not self.player.validate_all_cards(PLAY_TALON[0]):
-            self.ui.pushButtonDraw_T.setStyleSheet(THEME.hasToDraw)
+            self.ui.pushButtonDraw_T.setStyleSheet(THEME.highlightedDrawTalon_Style)
             self.ui.LabelSpielername.setText(f"{self.player.name}, du musst ziehen.")
         else:
-            self.ui.pushButtonDraw_T.setStyleSheet(THEME.drawTalon)
+            self.ui.pushButtonDraw_T.setStyleSheet(THEME.normalDrawTalon_Style)
 
     # # Zug ##############
     def playCard(self, index: int):
@@ -415,7 +422,7 @@ class UiSpielFenster(QMainWindow):
     def cardAction(self):
         global Gewinner
         # ist Spieler fertig
-        self.ui.pushButtonDraw_T.setStyleSheet(THEME.drawTalon)
+        self.ui.pushButtonDraw_T.setStyleSheet(THEME.normalDrawTalon_Style)
         if self.player.spieler_fertig():
             Gewinner = self.player.name
             self.spielEnde()
@@ -471,7 +478,7 @@ class UiSpielFenster(QMainWindow):
         global Gewinner
         if not ein_spieler_fertig():
             self.refill()
-            self.ui.pushButtonUNO.setStyleSheet(THEME.UNOButton)
+            self.ui.pushButtonUNO.setStyleSheet(THEME.uno_SkipButton_Style)
             self.hideUnnecessary()
             self.setUpUi()
         else:
@@ -488,7 +495,7 @@ class UiSpielFenster(QMainWindow):
 
     def UNOClicked(self):
         self.uno_gesagt = True
-        self.ui.pushButtonUNO.setStyleSheet(THEME.UNOButtonclicked)
+        self.ui.pushButtonUNO.setStyleSheet(THEME.unoButtonClicked_Style)
         print("Spieler hat UNO gedrückt")
 
     def move2terFrame(self):
@@ -665,7 +672,7 @@ class UiSpielFenster(QMainWindow):
             karten.append(UiKarten("Schwarz", "Wunsch", spielbar=True, fenster=self.ui.frame_Handkarten, index=None))
         return karten
 
-
+# ### Forth 'Screen' ### #
 class UiKarten(QtWidgets.QWidget):
 
     def __init__(self, farbe, wert, spielbar, fenster, index, *args, **kwargs):
@@ -682,8 +689,11 @@ class UiKarten(QtWidgets.QWidget):
         # Style
         # ## Basic Farben
         self.background_color = "rgb(200, 50, 192)"
-        self.border_color = "rgb(255, 255, 255)"
-        self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/default.png"
+        self.border_color = THEME.normalBorderColor
+
+        # ### Theme.filepath
+        # self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/default.png"
+        self.image = f"{THEME.filePath}default.png"
         self.xKoordinate = 7
         self.yKoordinate = 7
 
@@ -692,16 +702,9 @@ class UiKarten(QtWidgets.QWidget):
         self.changeImage()
 
         self.pushButtonKarte.setGeometry(QtCore.QRect(self.xKoordinate, self.yKoordinate, 141, 233))
-        self.pushButtonKarte.setMinimumSize(QtCore.QSize(141, 233))
-        self.pushButtonKarte.setMaximumSize(QtCore.QSize(141, 233))  # ??
-        self.pushButtonKarte.setStyleSheet("QPushButton {\n"
-                                           f"    background-color: {self.background_color};\n"
-                                           "    border-radius: 15px;\n"
-                                           "    border-width: 3px;\n"
-                                           "    border-style: solid;\n"
-                                           f"    border-color: {self.border_color};\n"
-                                           f"    image: url({self.image});\n"
-                                           "}")
+        #self.pushButtonKarte.setMinimumSize(QtCore.QSize(141, 233))
+        #self.pushButtonKarte.setMaximumSize(QtCore.QSize(141, 233))  # ??
+        self.setCardStyle()
         self.pushButtonKarte.setObjectName("pushButtonKarte")
         # self.layout.addWidget(self.pushButtonKarte, 0, 0)
 
@@ -710,6 +713,15 @@ class UiKarten(QtWidgets.QWidget):
 
         self.pushButtonKarte.hide()
 
+    def setCardStyle(self):
+        self.pushButtonKarte.setStyleSheet("QPushButton {\n"
+                                           f"    background-color: {self.background_color};\n"
+                                           "    border-radius: 15px;\n"
+                                           "    border-width: 3px;\n"
+                                           "    border-style: solid;\n"
+                                           f"    border-color: {self.border_color};\n"
+                                           f"    image: url({self.image});\n"
+                                           "}")
     def buttonClicked(self):
         print(f" Kartenindex: {self.index}")  # Test:
         if self.spielbar:
@@ -718,71 +730,43 @@ class UiKarten(QtWidgets.QWidget):
 
     def changeBackground(self):
         if self.farbe == "Blau":
-            self.background_color = THEME.blau
+            self.background_color = THEME.blue
         elif self.farbe == "Grün":
             self.background_color = THEME.green
         elif self.farbe == "Gelb":
-            self.background_color = THEME.gelb
+            self.background_color = THEME.yellow
         elif self.farbe == "Rot":
-            self.background_color = THEME.rot
+            self.background_color = THEME.red
         else:
             self.background_color = THEME.black
 
     def changeImage(self):
         pfad = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/"
-        self.image = f"{pfad}{self.wert}.png"
-        """"if self.wert == "0":
-            self.image = f"{pfad}0.png"
-        elif self.wert == "1":
-            self.image = f"{pfad}1.png"
-        elif self.wert == "2":
-            self.image = f"{pfad}2.png"
-        elif self.wert == "3":
-            self.image = f"{pfad}3.png"
-        elif self.wert == "4":
-            self.image = f"{pfad}4.png"
-        elif self.wert == "5":
-            self.image = f"{pfad}5.png"
-        elif self.wert == "6":
-            self.image = f"{pfad}6.png"
-        elif self.wert == "7":
-            self.image = f"{pfad}7.png"
-        elif self.wert == "8":
-            self.image = f"{pfad}8.png"
-        elif self.wert == "9":
-            self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/9.png"
-        elif self.wert == "+2":
-            self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/+2.png"
-        elif self.wert == "Aussetzen":
-            self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/Aussetzen.png"
-        elif self.wert == "Richtungswechsel":
-            self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/Richtungswechsel.png"
-        elif self.wert == "+4":
-            self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/+4.png"
-        else:
-            self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/Wunsch.png"""""
+        self.image = f"{THEME.filePath}{self.wert}.png"
 
     def changeBorder(self):
         if self.spielbar:
-            self.border_color = THEME.borderPlay
-            self.pushButtonKarte.setStyleSheet("QPushButton {\n"
+            self.border_color = THEME.playableBorderColor
+            """self.pushButtonKarte.setStyleSheet("QPushButton {\n"
                                                f"    background-color: {self.background_color};\n"
                                                "    border-radius: 15px;\n"
                                                "    border-width: 6px;\n"
                                                "    border-style: solid;\n"
                                                f"    border-color: {self.border_color};\n"
                                                f"    image: url({self.image});\n"
-                                               "}")
+                                               "}")"""
+            self.setCardStyle()
         else:
-            self.border_color = THEME.borderNormal
-            self.pushButtonKarte.setStyleSheet("QPushButton {\n"
+            self.border_color = THEME.normalBorderColor
+            """self.pushButtonKarte.setStyleSheet("QPushButton {\n"
                                                f"    background-color: {self.background_color};\n"
                                                "    border-radius: 15px;\n"
                                                "    border-width: 4px;\n"
                                                "    border-style: solid;\n"
                                                f"    border-color: {self.border_color};\n"
                                                f"    image: url({self.image});\n"
-                                               "}")
+                                               "}")"""
+            self.setCardStyle()
 
     def changeGeometry(self, x, y):
         self.xKoordinate = x
@@ -813,9 +797,10 @@ class UiKarten(QtWidgets.QWidget):
                                            "    border-radius: 15px;\n"
                                            "    border-width: 3px;\n"
                                            "    border-style: solid;\n"
-                                           f"    border-color: rgb(255, 255, 255);\n"
+                                           f"    border-color: rgb(255, 255, 255);\n"    ####
                                            f"    image: url({self.image});\n"
                                            "}")
+        # self.setCardStyle(
 
 
 class Spieler:
@@ -877,7 +862,7 @@ class UiEndWindow(QMainWindow):
         self.setTheme()
 
         self.titel = "UNO - The Game"
-        self.icon = 'D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/icon.png'
+        self.icon = f'{THEME.filePath}icon.png'
 
         self.setWindowTitle(self.titel)
         self.setWindowIcon(QtGui.QIcon(self.icon))
@@ -888,14 +873,14 @@ class UiEndWindow(QMainWindow):
         self.ui.pushButtonQuit.clicked.connect(self.close)
 
     def setTheme(self):
-        self.ui.frame.setStyleSheet(THEME.backgroundstyleSpiel)
-        self.ui.labelSpielende.setStyleSheet(THEME.gewinnerLabel)
+        self.ui.frame.setStyleSheet(THEME.windowBackground_Style)
+        self.ui.labelSpielende.setStyleSheet(THEME.gameOverMassage_Style)
         self.ui.labelGewinner.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
                          f"color: {PLAYERS[0].farbe};")
-        self.ui.pushButtonMenu.setStyleSheet(THEME.menuQuitButton)
-        self.ui.pushButtonQuit.setStyleSheet(THEME.menuQuitButton)
-        self.ui.pushButtonPlayAgain.setStyleSheet(THEME.PlayButton)
-        self.ui.frame_2.setStyleSheet(THEME.frameBackground)
+        self.ui.pushButtonMenu.setStyleSheet(THEME.menu_QuitButton_Style)
+        self.ui.pushButtonQuit.setStyleSheet(THEME.menu_QuitButton_Style)
+        self.ui.pushButtonPlayAgain.setStyleSheet(THEME.playAgainButton_Style)
+        self.ui.frame_2.setStyleSheet(THEME.transparentBackground)
 
     def play_again(self):
         global PLAYERS, DRAW_TALON, PLAY_TALON
