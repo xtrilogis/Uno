@@ -1,6 +1,12 @@
 class ColorTheme:
+    """Contains als Variables and Stylesheets needed for The GUI
+
+    VALUES contain all Values(Colors and Radius) which are changed for a new Theme
+    STYLESHEETS contains the Stylesheets based on the Values
+    UpdateStyle is needed for any new Theme to update the Stylesheets with the new Values"""
+
     def __init__(self):
-        # ##### VALUES ############################################################################### #
+        # ##### VALUES ######################################## #
         self.backgroundColor = "rgb(240, 240, 240)"
 
         # ## COLORS ## #
@@ -57,7 +63,7 @@ class ColorTheme:
         # Forth 'Screen'
         self.buttonRadiusGameOverMenu = "25px"
 
-        # STYLESHEETS ############################################################################### #
+        # STYLESHEETS ######################################## #
         self.transparentBackground = "background-color: rgba(255, 255, 255, 0);"
         self.windowBackground_Style = ("QFrame {\n"
                                        f"    background-color: {self.backgroundColor};\n"
@@ -155,11 +161,11 @@ class ColorTheme:
                                   f"    background-color: {self.green};\n"
                                   f"    {self.buttonRadiusWildcard_ColorWish}"
                                   "}")
-        self.gelbChoice_Style = ("QPushButton {\n"
-                                 f"    background-color: {self.yellow};\n"
-                                 f"    {self.buttonRadiusWildcard_ColorWish}"
-                                 "}")
-        self.rotChoice_Style = ("QPushButton {\n"
+        self.yellowChoice_Style = ("QPushButton {\n"
+                                   f"    background-color: {self.yellow};\n"
+                                   f"    {self.buttonRadiusWildcard_ColorWish}"
+                                   "}")
+        self.redChoice_Style = ("QPushButton {\n"
                                 f"    background-color: {self.red};\n"
                                 f"    {self.buttonRadiusWildcard_ColorWish}"
                                 "}")
@@ -176,6 +182,7 @@ class ColorTheme:
                                       "}")
 
     def updateStyle(self):
+        """Updates the Stylesheets, needed whenever attributes are other than the default"""
         self.transparentBackground = "background-color: rgba(255, 255, 255, 0);"
         self.windowBackground_Style = ("QFrame {\n"
                                        f"    background-color: {self.backgroundColor};\n"
@@ -268,11 +275,11 @@ class ColorTheme:
                                   f"    background-color: {self.green};\n"
                                   f"    {self.buttonRadiusWildcard_ColorWish}"
                                   "}")
-        self.gelbChoice_Style = ("QPushButton {\n"
-                                 f"    background-color: {self.yellow};\n"
-                                 f"    {self.buttonRadiusWildcard_ColorWish}"
-                                 "}")
-        self.rotChoice_Style = ("QPushButton {\n"
+        self.yellowChoice_Style = ("QPushButton {\n"
+                                   f"    background-color: {self.yellow};\n"
+                                   f"    {self.buttonRadiusWildcard_ColorWish}"
+                                   "}")
+        self.redChoice_Style = ("QPushButton {\n"
                                 f"    background-color: {self.red};\n"
                                 f"    {self.buttonRadiusWildcard_ColorWish}"
                                 "}")
@@ -289,4 +296,4 @@ class ColorTheme:
                                       "}")
 
 
-name = ColorTheme()
+default = ColorTheme()
