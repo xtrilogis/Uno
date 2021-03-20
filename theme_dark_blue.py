@@ -14,8 +14,8 @@ dark_blue.buttonColorPassive = "rgb(158, 89, 48)"
 dark_blue.buttonColorFocus = "rgb(245, 125, 5)"
 
 # First 'Screen'
-dark_blue.titelColor = "rgb(99, 140, 186)"
-dark_blue.subtitelColor = "rgb(74, 105, 138);"
+dark_blue.titleColor = "rgb(99, 140, 186)"
+dark_blue.subtitleColor = "rgb(74, 105, 138);"
 dark_blue.infoLabelColor = "rgb(152, 166, 202)"
 
 # Second 'Screen'
@@ -45,4 +45,4 @@ dark_blue.defaultPlayerColors = ["rgb(150, 129, 212)", "rgb(61, 198, 213)",
                                  "rgb(67, 190, 40)", "rgb(59, 216, 230)",
                                  "rgb(230, 198, 30)", "rgb(230, 37, 170)"
                                  ]
-dark_blue.updateStyle()
+dark_blue

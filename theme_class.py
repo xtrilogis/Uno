@@ -63,6 +63,39 @@ class ColorTheme:
         # Forth 'Screen'
         self.buttonRadiusGameOverMenu = "25px"
 
+        """        # ###
+        self.transparentBackground = ""
+        self.windowBackground_Style = ()
+        self.gameWindowBackground_Style = ()
+        # ### First 'Screen'
+        self.titelLabel_Style = ()
+        self.subtitleLabel_Style = ()
+        self.mainButton_Style = ()
+        self.infoLabel_Style = f""
+        # Second 'Screen'
+        self.entryLabels_Style = ()
+        self.pulsMinusButton_Style = ()
+        self.spinBox_Style = ()
+        self.playerNameEntry_Style = ()
+        self.colorButton_Style = ()
+        self.okButton_Style = ()
+        self.passiveButton_Style = ()
+        self.theme_ResetButton_Style = ()
+        # Third 'Screen'
+
+        self.uno_SkipButton_Style = ()
+        self.unoButtonClicked_Style = ()
+        self.highlightedDrawTalon_Style = ()
+        self.normalDrawTalon_Style = ()
+        self.blueChoice_Style = ()
+        self.greenChoice_Style = ()
+        self.yellowChoice_Style = ()
+        self.redChoice_Style = ()
+        # Forth 'Screen'
+        self.gameOverMassage_Style = self.titelLabel_Style
+        self.playAgainButton_Style = ()
+        self.menu_QuitButton_Style = ()
+        
         # STYLESHEETS ######################################## #
         self.transparentBackground = "background-color: rgba(255, 255, 255, 0);"
         self.windowBackground_Style = ("QFrame {\n"
@@ -122,7 +155,6 @@ class ColorTheme:
                                         "}")
 
         # Third 'Screen'
-        # self.currentPlayerName_Style = f"color: {self.entryLabelColor}"
         self.uno_SkipButton_Style = ("QPushButton {\n"
                                      f"    background-color: {self.buttonColorFocus};\n"
                                      f"    border-radius: {self.entryRadius}\n"
@@ -147,11 +179,6 @@ class ColorTheme:
                                       f"    border-color: {self.black};"
                                       f"     image: url({self.filePath}default.png);\n "
                                       "}")
-        """"QPushButton {\n"
-                                      f"    background-color: {self.bl};\n"
-                                      "    border-radius: 15px;\n"
-                                      f"   image: url({self.filePath}default.png);\n "
-                                      "}")"""
 
         self.blueChoice_Style = ("QPushButton {\n"
                                  f"    background-color: {self.blue};\n"
@@ -179,10 +206,11 @@ class ColorTheme:
         self.menu_QuitButton_Style = ("QPushButton {\n"
                                       f"    background-color: {self.buttonColorBasic};\n"
                                       f"    border-radius: {self.buttonRadiusGameOverMenu}\n"
-                                      "}")
+                                      "}")"""
+        self.updateStyle()
 
     def updateStyle(self):
-        """Updates the Stylesheets, needed whenever attributes are other than the default"""
+        """"Updates the Stylesheets, needed whenever attributes are other than the default"""
         self.transparentBackground = "background-color: rgba(255, 255, 255, 0);"
         self.windowBackground_Style = ("QFrame {\n"
                                        f"    background-color: {self.backgroundColor};\n"
@@ -200,12 +228,12 @@ class ColorTheme:
         self.mainButton_Style = ("QPushButton {\n"
                                  f"    background-color: {self.buttonColorActive};\n"
                                  f"    border-radius: {self.buttonRadiusMain};\n"
-                                 "}")  # StartButton
-        self.infoLabel_Style = f"color: {self.infoLabelColor};"  # infoLabel
+                                 "}")
+        self.infoLabel_Style = f"color: {self.infoLabelColor};"
 
         # Second 'Screen'
         self.entryLabels_Style = (f"{self.transparentBackground}\n"
-                                  f"color: {self.entryLabelColor}")  # AnzahlLabel | NameLabel
+                                  f"color: {self.entryLabelColor}")
         self.pulsMinusButton_Style = ("QPushButton {\n"
                                       f"    background-color: {self.entryButtonColor};\n"
                                       f"    border-radius: {self.entryRadius};\n"
@@ -218,7 +246,7 @@ class ColorTheme:
         self.playerNameEntry_Style = ("QLineEdit {\n"
                                       f"    background-color: {self.entryLineEditColor};\n"
                                       f"    border-radius: {self.entryRadius};\n"
-                                      "}")  # NameEingabe
+                                      "}")
         self.colorButton_Style = ("QPushButton {\n"
                                   f"    background-color: {self.entryCustomPlayerColor};\n"
                                   f"    border-radius: {self.entryRadius};\n"
@@ -241,7 +269,7 @@ class ColorTheme:
                                         "}")
 
         # Third 'Screen'
-        # self.currentPlayerName_Style = f"color: {self.entryLabelColor}"
+
         self.uno_SkipButton_Style = ("QPushButton {\n"
                                      f"    background-color: {self.buttonColorFocus};\n"
                                      f"    border-radius: {self.entryRadius}\n"

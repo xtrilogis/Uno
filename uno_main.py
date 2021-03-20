@@ -247,30 +247,31 @@ class UiMainGameWindow(QMainWindow):
 
         self.pfad = THEME.filePath  # ## to-do
 
-        # Variablen
         self.titel = "UNO - The Game"
         self.icon = f'{self.pfad}icon.png'
-
-        # ?? self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         self.rand = 10
         self.zwischen = 3
         self.karten_w = 141
         self.karten_h = 233
 
-        self.aktiviert = True
+        self.aktiviert = True  # ## Was ist aktiviert
         self.uno_gesagt = False
-        self.farbe = None
-        self.hFrame = 1
+        self.farbe = None  # welche farbe
+        self.hFrame = 1  # hFrame dafuq
 
         self.player = PLAYERS[0]
         # Basic Ui Änderungen
         # set
-        self.setWindowTitle(self.titel)
-        self.setWindowIcon(QtGui.QIcon(self.icon))
+        self.setWindowTitle(self.titel)  # setup Ui
+        self.setWindowIcon(QtGui.QIcon(self.icon))  # setup ui
 
         # hide
-        self.hideUnnecessary()
+        self.hideUnnecessary()  # in setup UI
+
+        # Funktionsaufrufe
+        self.preStart()
+        self.setUpUi()
 
         # ## BUTTON AKTIONEN ## #
         self.ui.pushButtonDraw_T.clicked.connect(self.nachziehen)
@@ -285,11 +286,6 @@ class UiMainGameWindow(QMainWindow):
         self.ui.pushButtonGelb.clicked.connect(self.colorYellow)
         self.ui.pushButtoRot.clicked.connect(self.colorRed)
 
-        # Funktionsaufrufe
-        self.preStart()
-        self.setUpUi()
-
-        #self.show()
 
     def setTheme(self):
         # Frames
@@ -353,12 +349,11 @@ class UiMainGameWindow(QMainWindow):
         """
         if "Black" in DRAW_TALON[0].farbe:
             PLAY_TALON.append(DRAW_TALON.pop(1))
-            self.ui.pushButton_Play_T.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
         else:
             PLAY_TALON.append(DRAW_TALON.pop(0))
-            self.ui.pushButton_Play_T.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
+        self.setPlayTalonStyle()
 
-    def setUpHandkarten(self):
+    def setUpHandkarten(self):   # ### rename
         # SetUp Handkarten - Frame
         self.setFrameSize(self.kartenanzahl)
         self.setFrameBorder()
@@ -368,7 +363,7 @@ class UiMainGameWindow(QMainWindow):
             self.ui.pushButtonNextCardSet.show()
 
         # SetUp Handkarten - Karten
-        self.setUpCards(self.handkarten[0:12])
+        self.setUpCards(self.handkarten[0:12])  # setUpHand_Cards or Player_Cards -> Kommentar weg
 
     def setFrameSize(self, kartenanzahl):
         """Setzt die Größe des Handkarten Frame entsprechend der Kartenanzahl
@@ -402,14 +397,14 @@ class UiMainGameWindow(QMainWindow):
         und X auf 7 zurückgesetzt"""
         x = self.rand
         y = self.rand
-        counter = 0
+        number = 0
         kartenanzahl = len(karten)
 
         if kartenanzahl == 1:
-            self.setCardValues(self.handkarten[0], counter, self.rand, self.rand)
+            self.setCardValues(self.handkarten[0], 0, self.rand, self.rand)
             self.handkarten[0].pushButtonKarte.show()
         else:
-            for karte in karten:
+            for counter, karte in enumerate(karten):
                 karte.index = counter
                 self.setCardValues(karte, counter, x, y)
 
@@ -417,14 +412,15 @@ class UiMainGameWindow(QMainWindow):
                 if counter == 5:
                     y += self.karten_h + self.zwischen
                     x = self.rand
-                counter += 1
+                # counter += 1
+                number = counter
 
                 # Karten anzeigen
                 # print(karte.farbe, karte.wert, karte.index)
                 karte.pushButtonKarte.show()
 
         print("\n Karten positioniert")
-        print(f"Counter: {counter}")
+        print(f"Counter: {number}")
 
     def setCardValues(self, karte, counter: int, x, y):
         karte.index = counter
@@ -518,7 +514,7 @@ class UiMainGameWindow(QMainWindow):
 
     def endTurn(self):
         global VICTOR
-        if not ein_spieler_fertig():
+        if not self.ein_spieler_fertig():
             self.refill()
             self.ui.pushButtonUNO.setStyleSheet(THEME.uno_SkipButton_Style)
             self.hideUnnecessary()
@@ -657,7 +653,7 @@ class UiMainGameWindow(QMainWindow):
 
         self.ui.frameFarbwahl.show()
         self.aktiviert = False
-        self.ui.pushButton_Play_T.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
+        self.setPlayTalonStyle()
 
         self.setFrameSize(len(self.handkarten))
         self.setUpCards(self.handkarten)
@@ -665,7 +661,7 @@ class UiMainGameWindow(QMainWindow):
     def endJoker(self):
         PLAY_TALON[0].farbe = self.farbe
         PLAY_TALON[0].jokerStyle()
-        self.ui.pushButton_Play_T.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
+        self.setPlayTalonStyle()
 
         self.karten_hide(self.handkarten)
         self.ui.frameFarbwahl.hide()
@@ -676,50 +672,67 @@ class UiMainGameWindow(QMainWindow):
         self.play_order()
         self.endTurn()
 
+    def ein_spieler_fertig(self):
+        """Prüft, ob einer der Spieler fertig ist
+
+        falls ein ein Spieler fertig ist gibt .spieler_fertig Ture zurück, falls also True in ende -> ist ein spieler fertig
+        sonst wird False zurückgegeben"""
+        ende = []
+        for spieler, _ in enumerate(PLAYERS):
+            ende.append(PLAYERS[spieler].spieler_fertig())
+        if True in ende:
+            return True
+        else:
+            return False
+
+    def setPlayTalonStyle(self):
+        self.ui.pushButton_Play_T.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
+
     # # Funktionen sortiert unf "fertig" ##
     # ### KARTEN ERSTELLEN ### #
 
     def generate_cards(self):
+        """generates the hole deck and shuffles it"""
         global DRAW_TALON
         DRAW_TALON.extend(self.normal_cards())
         DRAW_TALON.extend(self.special_cards())
-        DRAW_TALON.extend(self.joker_cards())
+        DRAW_TALON.extend(self.wild_cards())
         random.shuffle(DRAW_TALON)
 
     def normal_cards(self) -> list:
-        """generiert die normalen Karten als Klasse aus global @COLORS und @VALUES, jede Karte gibt es viermal"""
+        """generates cards on basis of @COLORS und @VALUES, every card exists 4 times"""
         global COLORS, VALUES
         karten = []
         for i in range(4):
             for color in COLORS:
                 for value in VALUES:
-                    karten.append(UiKarten(color, value, spielbar=False, fenster=self.ui.frame_Handkarten, index=None))
+                    karten.append(UiCard(color, value, fenster=self.ui.frame_Handkarten))
         return karten
 
     def special_cards(self) -> list:
-        """erstellt Sonder-Karten +2, Aussetzen, Richtungswechsel, benutzt global constant @COLORS"""
+        """generates special cards with global @COLORS erstellt Sonder-Karten +2, Aussetzen, Richtungswechsel, benutzt global constant @COLORS"""
         global COLORS
-        special = ["+2", "Aussetzen", "Richtungswechsel"]
+        special = ["+2", "Aussetzen", "Richtungswechsel"]  # "Skip", "Turn"
         karten = []
         for i in range(4):
             for color in COLORS:
                 for value in special:
-                    karten.append(UiKarten(color, value, spielbar=False, fenster=self.ui.frame_Handkarten, index=None))
+                    karten.append(UiCard(color, value, fenster=self.ui.frame_Handkarten))
         return karten
 
-    def joker_cards(self) -> list:
-        """ erstellt Joker_Karten +4 und 'Wunsch', jede Karte gibt es vier mal"""
+    def wild_cards(self) -> list:
+        """ erstellt Joker_Karten +4 und 'Wunsch', jede Karte gibt es vier mal"""  # "wish" or "Choice"
         karten = []
         for i in range(4):
-            karten.append(UiKarten("Black", "+4", spielbar=True, fenster=self.ui.frame_Handkarten, index=None))
-            karten.append(UiKarten("Black", "Wunsch", spielbar=True, fenster=self.ui.frame_Handkarten, index=None))
+            karten.append(UiCard("Black", "+4",  fenster=self.ui.frame_Handkarten, spielbar=True))
+            karten.append(UiCard("Black", "Wunsch", fenster=self.ui.frame_Handkarten, spielbar=True))
         return karten
 
 
 # ### Forth 'Screen' ### #
-class UiKarten(QtWidgets.QWidget):
+class UiCard(QtWidgets.QWidget):
 
-    def __init__(self, farbe, wert, spielbar, fenster, index, *args, **kwargs):
+    def __init__(self, farbe, wert,  fenster, spielbar=False, index=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fenster = fenster
         self.pushButtonKarte = QtWidgets.QPushButton(fenster)
@@ -867,35 +880,27 @@ class Spieler:
         self.handkarten.extend(ausgeteilt)
         return
 
-    def validate_all_cards(self, oberste_karte):
-        x = False
+    def validate_all_cards(self, oberste_karte: UiCard):
+        """checks if the player has any card which is playable
+
+        :parameter -> object of Cards
+        :return -> bool"""
         for karte in self.handkarten:
             karte.validate_card(oberste_karte)
             if karte.spielbar:
-                x = True
-        return x
+                return True
+        return False
 
     def spieler_fertig(self):
+        """check whether the player has won (has no cards)
+
+        :return ->bool"""
         if len(self.handkarten) == 0:
             return True
 
-    def pop(self, index):
+    def pop(self, index: int):
         karte = self.handkarten.pop(index)
         return karte
-
-
-def ein_spieler_fertig():
-    """Prüft, ob einer der Spieler fertig ist
-
-    falls ein ein Spieler fertig ist gibt .spieler_fertig Ture zurück, falls also True in ende -> ist ein spieler fertig
-    sonst wird False zurückgegeben"""
-    ende = []
-    for spieler in range(len(PLAYERS)):
-        ende.append(PLAYERS[spieler].spieler_fertig())
-    if True in ende:
-        return True
-    else:
-        return False
 
 
 class UiEndWindow(QMainWindow):
