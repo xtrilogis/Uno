@@ -1,3 +1,18 @@
+class Size:
+    """Contains basic sizes for the GUI"""
+    def __init__(self):
+        self.rand = 10
+        self.space = 3
+        self.card_width = 141
+        self.card_height = 233
+
+        self.card_w_and_space = self.card_width + self.space
+        self.card_h_and_space = self.card_height + self.space
+
+
+size = Size()
+
+
 class ColorTheme:
     """Contains als Variables and Stylesheets needed for The GUI
 

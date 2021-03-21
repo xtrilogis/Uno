@@ -19,19 +19,19 @@
      <number>2</number>
     </property>
     <property name="leftMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>2</number>
+     <number>0</number>
     </property>
     <item>
-     <widget class="QFrame" name="frameHintergrund">
+     <widget class="QFrame" name="frame_background">
       <property name="styleSheet">
        <string notr="true">QFrame {
 	background-color: rgb(217, 198, 255);
@@ -45,7 +45,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="5" column="4">
-        <widget class="QFrame" name="frameFarbwahl">
+        <widget class="QFrame" name="frame_wild_color_choice">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -66,7 +66,7 @@
            <number>4</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButtonBlau">
+           <widget class="QPushButton" name="pushButton_wild_blue">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -94,7 +94,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonGruen">
+           <widget class="QPushButton" name="pushButton_wild_green">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -123,7 +123,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonGelb">
+           <widget class="QPushButton" name="pushButton_wild_yellow">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -152,7 +152,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtoRot">
+           <widget class="QPushButton" name="pushButton_wild_red">
             <property name="minimumSize">
              <size>
               <width>0</width>
@@ -200,7 +200,7 @@
         </spacer>
        </item>
        <item row="6" column="1">
-        <widget class="QFrame" name="frameLeftLast">
+        <widget class="QFrame" name="frame_left_last">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -238,7 +238,7 @@
            </spacer>
           </item>
           <item row="2" column="2">
-           <widget class="QPushButton" name="pushButtonLastCardSet">
+           <widget class="QPushButton" name="pushButton_last_card_set">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -293,7 +293,7 @@
         </widget>
        </item>
        <item row="3" column="4">
-        <widget class="QFrame" name="frame_Stapel">
+        <widget class="QFrame" name="frame_talons">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
@@ -377,7 +377,7 @@
            </spacer>
           </item>
           <item row="1" column="3">
-           <widget class="QPushButton" name="pushButtonDraw_T">
+           <widget class="QPushButton" name="pushButton_Draw_Talon">
             <property name="minimumSize">
              <size>
               <width>145</width>
@@ -403,7 +403,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="pushButton_Play_T">
+           <widget class="QPushButton" name="pushButton_Play_Talon">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -456,7 +456,7 @@
         </spacer>
        </item>
        <item row="2" column="4">
-        <widget class="QFrame" name="frameTop">
+        <widget class="QFrame" name="frame_uno_name">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -477,7 +477,7 @@
            <number>1</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButtonUNO">
+           <widget class="QPushButton" name="pushButton_uno">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -510,7 +510,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="LabelSpielername">
+           <widget class="QLabel" name="label_current_player">
             <property name="font">
              <font>
               <family>Yu Gothic UI Semibold</family>
@@ -547,7 +547,7 @@
         </spacer>
        </item>
        <item row="4" column="4">
-        <widget class="QFrame" name="framePassen">
+        <widget class="QFrame" name="frame_skip">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -581,7 +581,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonWeiter">
+           <widget class="QPushButton" name="pushButton_skip">
             <property name="minimumSize">
              <size>
               <width>70</width>
@@ -622,7 +622,7 @@
         </widget>
        </item>
        <item row="6" column="6">
-        <widget class="QFrame" name="frameRightNext">
+        <widget class="QFrame" name="frame_right_next">
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
          </property>
@@ -631,7 +631,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="2" column="0">
-           <widget class="QPushButton" name="pushButtonNextCardSet">
+           <widget class="QPushButton" name="pushButton_next_card_set">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -728,7 +728,7 @@
         </spacer>
        </item>
        <item row="6" column="4">
-        <widget class="QFrame" name="frame_Handkarten">
+        <widget class="QFrame" name="frame_player_hand">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>

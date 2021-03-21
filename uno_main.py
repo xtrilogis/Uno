@@ -9,8 +9,9 @@ from ui_game_over_screen import *
 
 from theme_development import developer
 from theme_dark_blue import dark_blue
-from theme_class import default
+from theme_class import default, size
 
+"Handkartenframe wird nicht angezeigt"
 "Pfad als Relation vom Projekt ordner"
 # ### GLOBALS ### #
 COLORS = ["Blue", "Green", "Yellow", "Red"]
@@ -24,6 +25,10 @@ VICTOR = None
 THEME = default
 
 
+# ##### Front-End Methods (GUI) ##### #
+# ##### Back-End Methods (None-GUI/No direct relation) ##### #
+# ##### Button calls ##### #
+
 # ### First + Second 'Screen' ### #
 class UiStartWindow(QMainWindow):
     def __init__(self):
@@ -35,8 +40,8 @@ class UiStartWindow(QMainWindow):
         self.player_counter = len(PLAYERS) + 1
 
         # ### SETUP UI ### #
-        self.setTheme()
-        self.setUp_start_screen()
+        self.set_theme()
+        self.setup_start_screen()
 
         self.prepare_game()
 
@@ -44,7 +49,7 @@ class UiStartWindow(QMainWindow):
         self.ui.pushButton_Start.clicked.connect(self.startPushed)
         self.ui.pushButton_Close.clicked.connect(self.close)
 
-        self.ui.pushButton_SelectColor.clicked.connect(self.showColorDialog)
+        self.ui.pushButton_SelectColor.clicked.connect(self.show_color_dialog)
         self.ui.pushButton_ReturnEntry.clicked.connect(self.process_name_entry)
         self.ui.pushButton_Next.clicked.connect(self.next_clicked)
 
@@ -52,7 +57,7 @@ class UiStartWindow(QMainWindow):
         self.ui.pushButton_Theme.clicked.connect(self.change_theme)
 
     # ##### Front-End Methods (GUI) ##### #
-    def setTheme(self):
+    def set_theme(self):
         """adjust all GUI parts to the currently selected Theme"""
         self.ui.frame_Background.setStyleSheet(THEME.windowBackground_Style)
         self.ui.frame_Close.setStyleSheet(THEME.transparentBackground)
@@ -82,15 +87,15 @@ class UiStartWindow(QMainWindow):
         self.ui.pushButton_Reset.setStyleSheet(THEME.theme_ResetButton_Style)
         self.ui.pushButton_Theme.setStyleSheet(THEME.theme_ResetButton_Style)
 
-    def setUp_start_screen(self):
+    def setup_start_screen(self):
         """sets Settings for the first screen to appear when Programm executed"""
         self.hide_prepare_screen()
-        self.set_DropShadow()
+        self.set_drop_shadow()
 
         self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # removes window control bar
         self.setAttribute(QtCore.Qt.WA_TranslucentBackground)  # transparent background behind frame
 
-    def set_DropShadow(self):
+    def set_drop_shadow(self):
         """adds a drop shadow to the background-frame as well as the start pushButton"""
         self.shadow.setBlurRadius(20)
         self.shadow.setXOffset(0)
@@ -149,9 +154,9 @@ class UiStartWindow(QMainWindow):
             sets the Player color by using the first element of the Player-colors list
         removes the used color to the end of the color list
         clears the lineEdit"""
-        PLAYERS.append(Spieler(name=self.ui.lineEdit_EnterName.text(),
-                               handkarten=[],
-                               farbe=THEME.defaultPlayerColors[0]))
+        PLAYERS.append(Player(name=self.ui.lineEdit_EnterName.text(),
+                              hand_cards=[],
+                              player_color=THEME.defaultPlayerColors[0]))
         THEME.defaultPlayerColors.append(THEME.defaultPlayerColors.pop(0))
         self.ui.lineEdit_EnterName.clear()
 
@@ -169,12 +174,13 @@ class UiStartWindow(QMainWindow):
         self.ui.label_Result.show()
 
         self.ui.label_Entry.setText(f"Spieler {self.player_counter}:")
+        given_entries = self.ui.spinBox_Quantity.value() - len(PLAYERS)
         if len(PLAYERS) == 0:
             self.ui.label_Result.setText(f"Zu wenig Spieler! Noch kein Spielername eingegeben. \n"
-                                         f"Es fehlen noch: {self.ui.spinBox_Quantity.value()-len(PLAYERS)} Namen")
+                                         f"Es fehlen noch: {given_entries} Namen")
         else:
             self.ui.label_Result.setText(f"Zu wenig Spieler! Nur {len(PLAYERS)} Spielername(n) eingegeben.\n"
-                                         f"Es fehlen noch: {self.ui.spinBox_Quantity.value()-len(PLAYERS)} Namen")
+                                         f"Es fehlen noch: {given_entries} Namen")
 
     # ##### Button calls ##### #
     def startPushed(self):
@@ -182,7 +188,7 @@ class UiStartWindow(QMainWindow):
         self.hide_start_screen()
         self.show_prepare_screen()
 
-    def showColorDialog(self):
+    def show_color_dialog(self):
         """shows a pop-up Color Dialog and inserts the chosen color to the Player-color list"""
         selected_color = QColorDialog.getColor()
         if selected_color.isValid():
@@ -222,11 +228,11 @@ class UiStartWindow(QMainWindow):
         global THEME
         if THEME == dark_blue:
             THEME = developer
-        if THEME == developer:
+        elif THEME == developer:
             THEME = default
-        if THEME == default:
+        else:
             THEME = dark_blue
-        self.setTheme()
+        self.set_theme()
 
         # Next-Button is by default deactivated following activates it
         if len(PLAYERS) == self.ui.spinBox_Quantity.value():
@@ -239,8 +245,10 @@ class UiStartWindow(QMainWindow):
         self.ui.frame_PlayerEntry.show()
         self.ui.frame_PlayerQuantity.show()
         self.ui.pushButton_Next.setStyleSheet(THEME.passiveButton_Style)
+        self.ui.label_Result.hide()
 
         self.ui.spinBox_Quantity.setValue(2)
+        self.ui.lineEdit_EnterName.clear()
         self.player_counter = len(PLAYERS) + 1
         self.prepare_game()
 
@@ -251,455 +259,318 @@ class UiMainGameWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.setTheme()
-        # später im Prepare-screen
-        # spieler_preset()
-
-        self.pfad = THEME.filePath  # ## to-do
 
         self.titel = "UNO - The Game"
-        self.icon = f'{self.pfad}icon.png'
-
-        self.rand = 10
-        self.zwischen = 3
-        self.karten_w = 141
-        self.karten_h = 233
-
-        self.aktiviert = True  # ## Was ist aktiviert
-        self.uno_gesagt = False
-        self.farbe = None  # welche farbe
-        self.hFrame = 1  # hFrame dafuq
+        self.icon = f'{THEME.filePath}icon.png'
 
         self.player = PLAYERS[0]
-        # Basic Ui Änderungen
-        # set
-        self.setWindowTitle(self.titel)  # setup Ui
-        self.setWindowIcon(QtGui.QIcon(self.icon))  # setup ui
+        self.number_of_shown_card_set = 1
+        self.called_uno = False
+        self.can_choose_a_card = True   # Only changes if color for wild card needs to be chosen
 
-        # hide
-        self.hideUnnecessary()  # in setup UI
-
-        # Funktionsaufrufe
-        self.preStart()
-        self.setUpUi()
+        self.pre_start()
 
         # ## BUTTON AKTIONEN ## #
-        self.ui.pushButtonDraw_T.clicked.connect(self.nachziehen)
-        self.ui.pushButtonWeiter.clicked.connect(self.passen)
-        self.ui.pushButtonUNO.clicked.connect(self.UNOClicked)
+        self.ui.pushButton_Draw_Talon.clicked.connect(self.draw_card_from_Draw_Talon)
+        self.ui.pushButton_skip.clicked.connect(self.player_skips)
+        self.ui.pushButton_uno.clicked.connect(self.uno_button_clicked)
 
-        self.ui.pushButtonNextCardSet.clicked.connect(self.move2terFrame)
-        self.ui.pushButtonLastCardSet.clicked.connect(self.moveBack1terFrame)
+        self.ui.pushButton_next_card_set.clicked.connect(self.move_to_rest_of_hand)
+        self.ui.pushButton_last_card_set.clicked.connect(self.move_back_to_last_of_hand)
 
-        self.ui.pushButtonBlau.clicked.connect(self.colorBlue)
-        self.ui.pushButtonGruen.clicked.connect(self.colorGreen)
-        self.ui.pushButtonGelb.clicked.connect(self.colorYellow)
-        self.ui.pushButtoRot.clicked.connect(self.colorRed)
+        self.ui.pushButton_wild_blue.clicked.connect(self.selected_blue)
+        self.ui.pushButton_wild_green.clicked.connect(self.selected_green)
+        self.ui.pushButton_wild_yellow.clicked.connect(self.selected_yellow)
+        self.ui.pushButton_wild_red.clicked.connect(self.selected_red)
 
-    def setTheme(self):
-        # Frames
-        self.ui.frameHintergrund.setStyleSheet(THEME.gameWindowBackground_Style)
-        self.ui.frame_Stapel.setStyleSheet(THEME.transparentBackground)
-        self.ui.frame_Handkarten.setStyleSheet(THEME.transparentBackground)
-        self.ui.framePassen.setStyleSheet(THEME.transparentBackground)
-        self.ui.frameFarbwahl.setStyleSheet(THEME.transparentBackground)
-        self.ui.frameLeftLast.setStyleSheet(THEME.transparentBackground)
-        self.ui.frameRightNext.setStyleSheet(THEME.transparentBackground)
-        self.ui.frameTop.setStyleSheet(THEME.transparentBackground)
+    # ##### GUI ##### #
+    # ##### Front-End Methods (GUI) ##### #
+    def ui_preset(self):
+        """sets the default Game GUI"""
+        self.set_theme()
+        self.setWindowTitle(self.titel)
+        self.setWindowIcon(QtGui.QIcon(self.icon))
+        self.hide_unnecessary()
 
-        # weiter zu Skip
-        self.ui.pushButtonWeiter.setStyleSheet(THEME.uno_SkipButton_Style)
-        self.ui.pushButtonUNO.setStyleSheet(THEME.uno_SkipButton_Style)
-        self.ui.pushButtonBlau.setStyleSheet(THEME.blueChoice_Style)
-        self.ui.pushButtonGruen.setStyleSheet(THEME.greenChoice_Style)
-        self.ui.pushButtonGelb.setStyleSheet(THEME.yellowChoice_Style)
-        self.ui.pushButtoRot.setStyleSheet(THEME.redChoice_Style)
+    def setup_player_ui(self, hand_cards):
+        self.ui.label_current_player.setText(self.player.name)
+        self.adjust_color_to_player_color()
+        self.adjust_frame_player_hand(quantity=len(hand_cards))
+        self.position_and_update_hand_cards(hand_cards[:12])
 
-        # self.ui.LabelSpielername.setStyleSheet(THEME.aktuellerSp)
+    # ### Methods that hide and show stuff ### #
+    def hide_unnecessary(self):
+        """hides all elements only needed in special cases, e.g. uno-Button"""
+        self.ui.frame_skip.hide()
+        self.ui.frame_wild_color_choice.hide()
+        self.ui.pushButton_uno.hide()
+        self.ui.pushButton_next_card_set.hide()
+        self.ui.pushButton_last_card_set.hide()
 
-    def preStart(self):
+    def show_necessary(self):
+        """shows Buttons, that depend on specific settings when they are needed"""
+        length = len(self.player.hand)
+
+        # hide show uno
+        if length == 2:
+            self.ui.pushButton_uno.show()
+        else:
+            self.ui.pushButton_uno.hide()
+
+        # hide show next_card_set
+        if length > 12 and self.number_of_shown_card_set == 1:
+            self.ui.pushButton_next_card_set.show()
+        elif length > 24 and self.number_of_shown_card_set == (1 or 2):
+            self.ui.pushButton_next_card_set.show()
+        else:
+            self.ui.pushButton_next_card_set.hide()
+
+        # hide show last_card_set
+        if self.number_of_shown_card_set > 1:
+            self.ui.pushButton_last_card_set.show()
+        else:
+            self.ui.pushButton_last_card_set.hide()
+
+        """if length > 12:                         # show next Set button if needed
+            if self.number_of_shown_card_set == 2 and length <= 24:
+                self.ui.pushButton_next_card_set.hide()
+            elif self.number_of_shown_card_set == 3:
+                self.ui.pushButton_next_card_set.hide()
+            else:
+                self.ui.pushButton_next_card_set.show()
+        else:
+            self.ui.pushButton_next_card_set.hide()"""
+
+    def hide_player_cards(self):
+        for card in self.player.hand:
+            card.pushButtonKarte.hide()
+
+    # ### Methods that adjust or set properties ### #
+    def set_theme(self):
+        """adjust all GUI parts to the currently selected Theme"""
+        self.ui.frame_background.setStyleSheet(THEME.gameWindowBackground_Style)
+        self.ui.frame_talons.setStyleSheet(THEME.transparentBackground)
+        self.ui.frame_player_hand.setStyleSheet(THEME.transparentBackground)
+
+        self.ui.frame_uno_name.setStyleSheet(THEME.transparentBackground)
+        self.ui.pushButton_uno.setStyleSheet(THEME.uno_SkipButton_Style)
+
+        self.ui.frame_skip.setStyleSheet(THEME.transparentBackground)
+        self.ui.pushButton_skip.setStyleSheet(THEME.uno_SkipButton_Style)
+
+        self.ui.frame_wild_color_choice.setStyleSheet(THEME.transparentBackground)
+        self.ui.pushButton_wild_blue.setStyleSheet(THEME.blueChoice_Style)
+        self.ui.pushButton_wild_green.setStyleSheet(THEME.greenChoice_Style)
+        self.ui.pushButton_wild_yellow.setStyleSheet(THEME.yellowChoice_Style)
+        self.ui.pushButton_wild_red.setStyleSheet(THEME.redChoice_Style)
+
+        self.ui.frame_left_last.setStyleSheet(THEME.transparentBackground)
+        self.ui.frame_right_next.setStyleSheet(THEME.transparentBackground)
+
+    def set_play_talon_style(self):
+        """Adjusts the GUI of pushButton Play-Talon to current upcard"""
+        self.ui.pushButton_Play_Talon.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
+
+    def set_draw_talon_style(self):
+        """Adjust Draw-Button Style to highlight it, if the player has to draw a card
+
+        if none of the hand-card is playable the player has to draw"""
+        if not self.player.validate_all_cards(PLAY_TALON[0]):
+            self.ui.pushButton_Draw_Talon.setStyleSheet(THEME.highlightedDrawTalon_Style)
+            self.ui.label_current_player.setText(f"{self.player.name}, du musst ziehen.")
+        else:
+            self.ui.pushButton_Draw_Talon.setStyleSheet(THEME.normalDrawTalon_Style)
+
+    def adjust_color_to_player_color(self):
+        """set the frame and name-label color to the players color"""
+        color = self.player.color
+        self.ui.frame_player_hand.setStyleSheet("QFrame {\n"
+                                                "background-color: rgba(255, 255, 255, 0);\n"
+                                                f"    border: 7px solid  {color};\n"
+                                                "}")
+        self.ui.label_current_player.setStyleSheet(f"color: {color}")
+
+    def adjust_frame_player_hand(self, quantity):
+        """adjust the frame size depending on the number of cards
+
+        up to 6 Card in one row, max. to rows"""
+        rand = 2 * size.rand
+
+        if quantity <= 6:
+            width = rand + quantity * size.card_width + (quantity - 1) * size.space
+            height = rand + size.card_height
+        else:
+            width = rand + 6 * size.card_width + 5 * size.space
+            height = rand + 2 * size.card_height + 1 * size.space
+
+        self.ui.frame_player_hand.setMinimumSize(int(width), height)
+
+    def position_and_update_cards(self, cards):
+        """gives every card it's GUI Position as well as updating index and playable"""
+        x = size.rand
+        y = size.rand
+
+        for index, card in enumerate(cards):
+            card.index = index
+            card.validate_card(PLAY_TALON[0])
+
+            card.change_border()
+            card.change_geometry(x, y)
+            card.pushButtonKarte.show()
+
+            x += size.card_w_and_space
+            if index == 5:
+                y += size.card_h_and_space
+                x = size.rand
+
+    # ##### Back-End Methods (None-GUI/No direct relation) ##### #
+    # ##### TURN ##### #
+    # ### Methods preparing the game ### #
+    def pre_start(self):
+        """prepares the Game
+
+        generates cards, distributes them, sets upcard and sets default GUI settings"""
         self.generate_cards()
-
-        # handkarten verteilen
-        for spieler in range(len(PLAYERS)):
+        for spieler, _ in enumerate(PLAYERS):  # distributing cards
             PLAYERS[spieler].draw_card(7)
 
-    def setUpUi(self):
-        self.player = PLAYERS[0]
-        self.handkarten = self.player.handkarten
-        self.kartenanzahl = len(self.handkarten)
-        self.frame_farbe = self.player.farbe
+        self.turn_over_upcard()
+        self.ui_preset()
 
-        self.hFrame = 1
+    def turn_over_upcard(self):
+        """defines first upcard
 
-        self.ui.LabelSpielername.setText(self.player.name)
-
-        # Startkarte aufdecken
-        self.setPlayTalon()
-
-        # Wenn UNO möglich --> UNO Button erscheint
-        if self.kartenanzahl == 2:
-            self.ui.pushButtonUNO.show()
-
-        self.setUpHandkarten()
-        print("~ Setup completed ~")
-        print(f"Karten von {PLAYERS[0].name} | {self.kartenanzahl}")
-
-        # Prüft 'muss ziehen'
-        self.setDrawTalon()
-
-    # ### UI SETUP - STAPEL + HANDKARTENKARTEN UI ### #
-    def setPlayTalon(self):
-        """deckt die erste Spielkarte auf
-
-        fügt die erste Karte vom Zugstapel dem Spielstapel hinzu
-        falls die erste Karte ein Joker ist, wird die nächste Karte als oberste Karte genommen
-        setzt das StyleSheet vom PLY_TALON - Button auf das der obersten Karte
-        """
-        if "Black" in DRAW_TALON[0].farbe:
+        takes first card of Draw-Talon and appends it to Play-Talon
+        takes second card if first card is a wild cards
+        adjust the style of Button Play-Talon"""
+        if "Black" in DRAW_TALON[0].color:
             PLAY_TALON.append(DRAW_TALON.pop(1))
         else:
             PLAY_TALON.append(DRAW_TALON.pop(0))
-        self.setPlayTalonStyle()
+        self.set_play_talon_style()
 
-    def setUpHandkarten(self):  # ### rename
-        # SetUp Handkarten - Frame
-        self.setFrameSize(self.kartenanzahl)
-        self.setFrameBorder()
+    # ### Methods controlling a players turn ### #
+    def start_turn(self):
+        self.player = PLAYERS[0]
+        current_hand = self.player.hand
+        self.number_of_shown_card_set = 1
+        self.show_necessary()
 
-        # Switch Button
-        if self.kartenanzahl > 12:
-            self.ui.pushButtonNextCardSet.show()
+        self.setup_player_ui(hand_cards=current_hand)
+        self.set_draw_talon_style()
 
-        # SetUp Handkarten - Karten
-        self.setUpCards(self.handkarten[0:12])  # setUpHand_Cards or Player_Cards -> Kommentar weg
+        print("~ Setup completed ~")
+        print(f"Karten von {PLAYERS[0].name} | {self.kartenanzahl}")
 
-    def setFrameSize(self, kartenanzahl):
-        """Setzt die Größe des Handkarten Frame entsprechend der Kartenanzahl
+    def discard_chosen_card(self, index: int):
+        """hides players cards, moves chosen card from player.hand to new upcard
 
-        bis 6 Karten eine Reihe a max. 6 Karten
-        bis 12 Karten zwei Reihen a max. 6 Karten"""
-        rand = 2 * self.rand
+        can_choose_a_card is only False if wild-card color-choice needs to be done"""
+        if self.can_choose_a_card:
+            self.hide_player_cards()
 
-        if kartenanzahl <= 6:
-            width = rand + kartenanzahl * self.karten_w + (kartenanzahl - 1) * self.zwischen
-            height = rand + self.karten_h
-        else:
-            width = rand + 6 * self.karten_w + 5 * self.zwischen
-            height = rand + 2 * self.karten_h + 1 * self.zwischen
+            PLAY_TALON.insert(0, self.player.hand.pop(index))
 
-        self.ui.frame_Handkarten.setMinimumSize(int(width), height)
+            PLAY_TALON[0].playable = False
+            PLAY_TALON[0].change_border()
 
-    def setFrameBorder(self):
-        self.ui.frame_Handkarten.setStyleSheet("QFrame {\n"
-                                               "background-color: rgba(255, 255, 255, 0);\n"
-                                               f"    border: 7px solid  {self.frame_farbe};\n"
-                                               "}")
-        self.ui.LabelSpielername.setStyleSheet(f"color: {self.frame_farbe}")
+            self.process_chosen_card()
 
-    def setUpCards(self, karten):
-        """vergibt an jede Karte ihre Position
+    def process_chosen_card(self):
+        """checks consequences of the chosen card
 
-        jede Karte bekommt einen Index zugeteilt
-        erste Karte ist (7 | 7), nächste (7 + Kartenbreite + Abstand zwischen karten | 7), usw.
-        wenn die maximal Zahl für eine Reihe voll ist wird der Y wert um eine Kartenhöhe mit Abstand erweitert
-        und X auf 7 zurückgesetzt"""
-        x = self.rand
-        y = self.rand
-        number = 0
-        kartenanzahl = len(karten)
-
-        if kartenanzahl == 1:
-            self.setCardValues(self.handkarten[0], 0, self.rand, self.rand)
-            self.handkarten[0].pushButtonKarte.show()
-        else:
-            for counter, karte in enumerate(karten):
-                karte.index = counter
-                self.setCardValues(karte, counter, x, y)
-
-                x += self.karten_w + self.zwischen
-                if counter == 5:
-                    y += self.karten_h + self.zwischen
-                    x = self.rand
-                # counter += 1
-                number = counter
-
-                # Karten anzeigen
-                # print(karte.farbe, karte.wert, karte.index)
-                karte.pushButtonKarte.show()
-
-        print("\n Karten positioniert")
-        print(f"Counter: {number}")
-
-    def setCardValues(self, karte, counter: int, x, y):
-        karte.index = counter
-        karte.validate_card(PLAY_TALON[0])
-        karte.changeBorder()
-        karte.changeGeometry(x, y)
-
-    def setDrawTalon(self):
-        """Passt UI an fall Spieler ziehen muss
-
-        Wenn der Spieler keine Karte spielen kann wir das Label geändert und DRAW_Talon bekommt einen Rahmen"""
-        if not self.player.validate_all_cards(PLAY_TALON[0]):
-            self.ui.pushButtonDraw_T.setStyleSheet(THEME.highlightedDrawTalon_Style)
-            self.ui.LabelSpielername.setText(f"{self.player.name}, du musst ziehen.")
-        else:
-            self.ui.pushButtonDraw_T.setStyleSheet(THEME.normalDrawTalon_Style)
-
-    # # Zug ##############
-    def playCard(self, index: int):
-        """ wird aufgerufen, wenn eine Karte ausgewählt wurde
-
-        aktiviert normalerweise Ture esseiden es muss eine Farbe für den Joker gewählt werden
-        setzt das Stylesheet von pushButton auf das von PushButtonKarte"""
-        if self.aktiviert:
-            # Spielerkarten verstecken
-            self.karten_hide(self.player.handkarten)
-
-            # Karte ablegen: von handkarten auf PLAY_TALON
-            PLAY_TALON.insert(0, self.player.handkarten.pop(index))
-
-            # Values für die UI
-            PLAY_TALON[0].spielbar = False
-            PLAY_TALON[0].changeBorder()
-
-            self.cardAction()
-
-    def cardAction(self):
+        checks whether the player has won
+        check if chosen card is a special or wild-card
+            calls a function to execute the cards action"""
         global VICTOR
-        # ist Spieler fertig
-        self.ui.pushButtonDraw_T.setStyleSheet(THEME.normalDrawTalon_Style)
-        if self.player.spieler_fertig():
-            VICTOR = self.player.name
-            self.spielEnde()
+        self.set_draw_talon_style()
+        self.set_play_talon_style()
 
-        if "Black" == PLAY_TALON[0].farbe:
-            self.joker_action(PLAY_TALON[0])
+        if self.player.player_finished():
+            VICTOR = self.player.name  # ### maybe in spiel ende
+            self.game_over()
         else:
-            # UNO gesagt?
-            self.UNO()
-
-            if PLAY_TALON[0].wert not in VALUES:
-                self.sonder_action(PLAY_TALON[0])
+            if PLAY_TALON[0].color == "Black":
+                self.wild_card_action(card=PLAY_TALON[0])
             else:
-                self.play_order()
+                self.check_uno()
 
-            self.endTurn()
+                if PLAY_TALON[0].value not in VALUES:
+                    self.special_card_action(card=PLAY_TALON[0])
+                else:
+                    self.play_order()
 
-    def nachziehen(self):
-        """ ähnlich wie playCard"""
-        if self.aktiviert:
-            print("Spieler zieht")
-            # Spielerkarten verstecken
-            self.karten_hide(self.handkarten)
+                self.endTurn()
 
-            # 1 Karte ziehen
+    def draw_card_from_Draw_Talon(self):
+        if self.can_choose_a_card:
+            self.hide_player_cards()
             self.player.draw_card(1)
 
-            if len(self.handkarten) == 2:
-                self.ui.pushButtonUNO.show()
+            self.show_necessary()
+
+            if self.number_of_shown_card_set == 2:
+                cards = self.player.hand[12:]
             else:
-                self.ui.pushButtonUNO.hide()
+                cards = self.player.hand[:12]
 
-            if len(self.handkarten) > 12:
-                self.ui.pushButtonNextCardSet.show()
+            self.setup_player_ui(hand_cards=cards)
+            self.ui.frame_skip.show()
 
-            if self.hFrame == 2:
-                self.ui.pushButtonNextCardSet.hide()
-                self.ui.pushButtonLastCardSet.show()
-                kartenanzahl = len(self.handkarten[12:])
-                handkarten = self.handkarten[12:]
-            else:
-                kartenanzahl = len(self.handkarten)
-                handkarten = self.handkarten
-            # Frame neu anpassen
-            self.setFrameSize(kartenanzahl)
-            # neue Handkarten anzeigen
-            self.setUpCards(handkarten[:12])
-
-            # Button zug beenden, falls, Karte nicht gespielt werden will kann
-            self.ui.framePassen.show()
-
-    def endTurn(self):
+    def end_turn(self):
+        """check for refill, resets ui, start_turn for the next player"""
         global VICTOR
         if not self.ein_spieler_fertig():
             self.refill()
-            self.ui.pushButtonUNO.setStyleSheet(THEME.uno_SkipButton_Style)
-            self.hideUnnecessary()
-            self.setUpUi()
+            self.ui.pushButton_uno.setStyleSheet(THEME.uno_SkipButton_Style)
+            self.hide_unnecessary()
+            self.start_turn()
         else:
-            VICTOR = self.player.name
-            self.spielEnde()
+            VICTOR = "Jemand hat gewonnen."
+            self.game_over()
 
-    # ##
-    # Button funktionen
-
-    def passen(self):
-        self.karten_hide(self.handkarten)
-        self.play_order()
-        self.endTurn()
-
-    def UNOClicked(self):
-        self.uno_gesagt = True
-        self.ui.pushButtonUNO.setStyleSheet(THEME.unoButtonClicked_Style)
-        print("Spieler hat UNO gedrückt")
-
-    def move2terFrame(self):
-        self.hideAllCards()
-        kartenzahl = len(self.handkarten[12:])
-        self.hFrame = 2
-
-        self.setFrameSize(kartenzahl)
-        self.setUpCards(self.handkarten[12:])
-
-        if len(self.handkarten) <= 24:
-            self.ui.pushButtonNextCardSet.hide()
-        self.ui.pushButtonLastCardSet.show()
-
-    def moveBack1terFrame(self):
-        self.hideAllCards()
-        kartenzahl = len(self.handkarten[0:12])
-        self.hFrame = 2
-
-        self.setFrameSize(kartenzahl)
-        self.setUpCards(self.handkarten[0:12])
-
-        self.ui.pushButtonLastCardSet.hide()
-        self.ui.pushButtonNextCardSet.show()
-
-    def colorBlue(self, text):
-        print(text)
-        self.farbe = "Blue"
-        self.endJoker()
-
-    def colorGreen(self):
-        self.farbe = "Green"
-        self.endJoker()
-
-    def colorYellow(self):
-        self.farbe = "Yellow"
-        self.endJoker()
-
-    def colorRed(self):
-        self.farbe = "Red"
-        self.endJoker()
-
-    # ### *Kategoriename* ### # ? Prepetetive?
-    def karten_show(self, karten):
-        for karte in karten:
-            karte.pushButtonKarte.show()
-
-    def karten_hide(self, karten):
-        for card in karten:
-            card.pushButtonKarte.hide()
-
-    def hideKarte(self, karte):
-        karte.pushButtonKarte.hide()
-
-    def hideAllCards(self):
-        for player in PLAYERS:
-            self.karten_hide(player.handkarten)
-
-    def hideUnnecessary(self):
-        self.ui.frameFarbwahl.hide()
-        self.ui.pushButtonUNO.hide()
-        self.ui.pushButtonNextCardSet.hide()
-        self.ui.pushButtonLastCardSet.hide()
-        self.ui.framePassen.hide()
-
-    def UNO(self):
-        if len(PLAYERS[0].handkarten) == 1:
-            if self.uno_gesagt:
-                self.ui.LabelSpielername.setText("Spieler hat UNO.")
-                self.uno_gesagt = False
-            else:
-                self.player.draw_card(2)
-                self.uno_gesagt = False
-            # ## print(f"geprüft")
-
-    def play_order(self):
-        """fügt den aktuellen Spieler hinten an die Spielerreihenfolge an"""
-        PLAYERS.append(PLAYERS.pop(0))
-        return
-
-    def refill(self):
-        """füllt den Zieh-Stapel neu auf"""
-        if len(DRAW_TALON) <= 4:
-            self.generate_cards()
-        return
-
-    def spielEnde(self):
-        self.ende = UiEndWindow()
+    def game_over(self):
+        """opens the Game-Over Window"""
+        self.ende = UiGameOverWindow()
         self.ende.show()
 
         self.close()
 
-    # ## Aktionen ## #
-    def sonder_action(self, karte):
-        global PLAYERS
-        if karte.wert == "+2":  # später noch "möchtest" du zwei Karten ziehen oder eine +2 oder +4 ablegen
-            PLAYERS[1].draw_card(2)
-            self.play_order()
-        elif karte.wert == "Aussetzen":
-            self.play_order()
-            # print(f'Spieler {PLAYERS[0].name} muss aussetzen.')
-            self.play_order()
-        else:  # wert == "Richtungswechsel"
-            if len(PLAYERS) == 2:
-                self.play_order()
-                self.play_order()
+    # ### Methods call in a turn ### #
+    def check_uno(self):
+        """checks if player has called uno
+
+        player only needs to call uno before he discards his
+        second last card"""
+        if len(self.player.hand) == 1:
+            if self.called_uno:
+                self.ui.label_current_player.setText("Spieler hat UNO")
+                # self.called_uno = False
             else:
-                PLAYERS = PLAYERS[::-1]  # Slicing
-            # print("Richtung gewechselt")
-        return
+                self.player.draw_card(2)
+            self.called_uno = False
 
-    def joker_action(self, karte):
-        global PLAYERS
-        if karte.wert == "+4":
-            # print(f"{PLAYERS[1].name} muss 4 Karten ziehen \n--------")
-            PLAYERS[1].draw_card(4)
+    def play_order(self):
+        """configures player-order by moving the first player to the end"""
+        PLAYERS.append(PLAYERS.pop(0))
 
-        self.ui.frameFarbwahl.show()
-        self.aktiviert = False
-        self.setPlayTalonStyle()
-
-        self.setFrameSize(len(self.handkarten))
-        self.setUpCards(self.handkarten)
-
-    def endJoker(self):
-        PLAY_TALON[0].farbe = self.farbe
-        PLAY_TALON[0].jokerStyle()
-        self.setPlayTalonStyle()
-
-        self.karten_hide(self.handkarten)
-        self.ui.frameFarbwahl.hide()
-        self.aktiviert = True
-
-        # Zugbeenden
-        self.UNO()
-        self.play_order()
-        self.endTurn()
+    def refill(self):
+        """refills Draw_Talon if only 4 or less cards in it"""
+        if len(DRAW_TALON) <= 4:
+            self.generate_cards()
 
     def ein_spieler_fertig(self):
-        """Prüft, ob einer der Spieler fertig ist
+        """Checks whether on player has won
 
-        falls ein ein Spieler fertig ist gibt .spieler_fertig Ture zurück, falls also True in ende -> ist ein spieler fertig
-        sonst wird False zurückgegeben"""
+        check by checking every player and appending the result to a list
+        if Ture in that list one player has won"""
         ende = []
         for spieler, _ in enumerate(PLAYERS):
-            ende.append(PLAYERS[spieler].spieler_fertig())
-        if True in ende:
-            return True
-        else:
-            return False
+            ende.append(PLAYERS[spieler].player_finished)
+        return (True in ende)
 
-    def setPlayTalonStyle(self):
-        self.ui.pushButton_Play_T.setStyleSheet(PLAY_TALON[0].pushButtonKarte.styleSheet())
-
-    # # Funktionen sortiert unf "fertig" ##
-    # ### KARTEN ERSTELLEN ### #
-
+    # ##### CARDS ##### #
+    # ### Methods generating cards ### #
     def generate_cards(self):
         """generates the hole deck and shuffles it"""
         global DRAW_TALON
@@ -711,75 +582,222 @@ class UiMainGameWindow(QMainWindow):
     def normal_cards(self) -> list:
         """generates cards on basis of @COLORS und @VALUES, every card exists 4 times"""
         global COLORS, VALUES
-        karten = []
-        for i in range(4):
+        normal_cards = []
+        for rate in range(4):
             for color in COLORS:
                 for value in VALUES:
-                    karten.append(UiCard(color, value, fenster=self.ui.frame_Handkarten))
-        return karten
+                    normal_cards.append(UiCard(color, value, display=self.ui.frame_player_hand))
+        return normal_cards
 
     def special_cards(self) -> list:
-        """generates special cards with global @COLORS erstellt Sonder-Karten +2, Aussetzen, Richtungswechsel, benutzt global constant @COLORS"""
+        """generates special cards with global @COLORS and list special"""
         global COLORS
-        special = ["+2", "Aussetzen", "Richtungswechsel"]  # "Skip", "Turn"
-        karten = []
-        for i in range(4):
+        special = ["+2", "Skip", "Change_Direction"]
+        special_cards = []
+        for rate in range(4):
             for color in COLORS:
                 for value in special:
-                    karten.append(UiCard(color, value, fenster=self.ui.frame_Handkarten))
-        return karten
+                    special_cards.append(UiCard(color, value, display=self.ui.frame_player_hand))
+        return special_cards
 
     def wild_cards(self) -> list:
-        """ erstellt Joker_Karten +4 und 'Wunsch', jede Karte gibt es vier mal"""  # "wish" or "Choice"
-        karten = []
-        for i in range(4):
-            karten.append(UiCard("Black", "+4", fenster=self.ui.frame_Handkarten, spielbar=True))
-            karten.append(UiCard("Black", "Wunsch", fenster=self.ui.frame_Handkarten, spielbar=True))
-        return karten
+        """creates +4 and 'Choice' as wild cards"""
+        wild_cards = []
+        for rate in range(4):
+            wild_cards.append(UiCard("Black", "+4",
+                                     display=self.ui.frame_player_hand,
+                                     playable=True))
+            wild_cards.append(UiCard("Black", "Choice",
+                                     display=self.ui.frame_player_hand,
+                                     playable=True))
+        return wild_cards
+
+    # ### Card actions ### #
+    def special_card_action(self, card):
+        """executes actions based on the special card played
+
+        if +2: next player in line draws two
+        if skip: next player in line gets moved to the end of player order as well
+        if change_direction: player order gets reversed"""
+        global PLAYERS
+        if card.value == "+2":  # später noch "möchtest" du zwei Karten ziehen oder eine +2 oder +4 ablegen
+            PLAYERS[1].draw_card(2)
+            self.play_order()
+        elif card.value == "Skip":
+            self.play_order()
+            self.play_order()
+        else:
+            if len(PLAYERS) == 2:
+                self.play_order()
+                self.play_order()
+            else:
+                PLAYERS = PLAYERS[::-1]  # Slicing
+
+    def wild_card_action(self, card):
+        """shows the players cards and buttons to choose a color"""
+        global PLAYERS
+        if card.value == "+4":
+            PLAYERS[1].draw_card(4)
+
+        self.ui.frame_wild_color_choice.show()
+        self.called_uno = False
+
+        self.setup_player_ui(hand_cards=self.player.hand)
+
+    def selected_blue(self):
+        """tells end_wild_card_action that color "Blue" has been chosen"""
+        self.end_wild_card_action(color="Blue")
+
+    def selected_green(self):
+        """tells end_wild_card_action that color "Green" has been chosen"""
+        self.end_wild_card_action(color="Green")
+
+    def selected_yellow(self):
+        """tells end_wild_card_action that color "Yellow" has been chosen"""
+        self.end_wild_card_action(color="Yellow")
+
+    def selected_red(self):
+        """tells end_wild_card_action that color "Red" has been chosen"""
+        self.end_wild_card_action(color="Red")
+
+    def end_wild_card_action(self, color):
+        PLAY_TALON[0].color = color
+        PLAY_TALON[0].wild_card_chosen_color_style()
+        self.set_play_talon_style()
+
+        self.hide_player_cards()
+        self.ui.frame_wild_color_choice.hide()  # ## necessary
+        self.can_choose_a_card = True
+
+        self.check_uno()
+        self.play_order()
+        self.endTurn()
+
+    # ##### Button calls ##### #
+    def player_skips(self):
+        """ hides player cards and finishes the turn
+
+        player choose not to play a card nor to draw again"""
+        self.karten_hide(self.handkarten)
+        self.play_order()
+        self.endTurn()
+
+    def uno_button_clicked(self):
+        """saves if player clicked the uno-Button and changes the stylesheet"""
+        self.called_uno = True
+        self.ui.pushButton_uno.setStyleSheet(THEME.unoButtonClicked_Style)
+        print("Spieler hat UNO gedrückt")
+
+    def move_to_rest_of_hand(self):
+        """shows cards whit index over 11 as 12 cards is maximum of shown cards
+
+        if the player has more than 12 Cards new cards are set in a "new" frame
+        which can be seen by clicking the Button"""
+        self.hide_player_cards()
+
+        if self.number_of_shown_set == 1:
+            self.number_of_shown_card_set = 2
+            spare_cards = self.player.hand[12:]  # ## test [12:24]
+            if len(spare_cards) <= 24:
+                self.ui.pushButton_next_card_set.hide()
+        else:
+            self.number_of_shown_card_set = 3
+            spare_cards = self.player.hand[24:]
+            self.ui.pushButton_next_card_set.hide()
+
+        self.adjust_frame_player_hand(quantity=len(spare_cards))
+        self.position_and_update_cards(cards=spare_cards)
+
+        self.ui.pushButton_last_card_set.show()
+
+    def move_back_to_last_of_hand(self):
+        """shows cards whit index smaller as currently shown
+
+        if the player has more than 12 Cards new cards are set in a "new" frame
+        clicking the last_set Button shows the previous cards"""
+        self.hide_player_cards()
+
+        if self.number_of_shown_set == 2:
+            self.number_of_shown_card_set = 1
+            spare_cards = self.player.hand[12:]  # ## test [12:24]
+            self.ui.pushButton_last_card_set.hide()
+            self.ui.pushButton_next_card_set.show()
+        else:  # self.number... = 3
+            self.number_of_shown_card_set = 3
+            spare_cards = self.player.hand[24:]
+            self.ui.pushButton_last_card_set.show()
+            self.ui.pushButton_next_card_set.show()
+
+        self.adjust_frame_player_hand(quantity=len(spare_cards))
+        self.position_and_update_cards(cards=spare_cards)
 
 
-# ### Forth 'Screen' ### #
 class UiCard(QtWidgets.QWidget):
-
-    def __init__(self, farbe, wert, fenster, spielbar=False, index=None, *args, **kwargs):
+    """creates a custom Widget to display the cards"""
+    def __init__(self, color, value, display, playable=False, index=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fenster = fenster
-        self.pushButtonKarte = QtWidgets.QPushButton(fenster)
+        self.display = display
+        self.pushButtonKarte = QtWidgets.QPushButton(display)
 
-        # Informationen
-        self.farbe = farbe
-        self.wert = wert
-        self.spielbar = spielbar
+        # ### Card Information ### #
+        self.color = color
+        self.value = value
+        self.playable = playable
         self.index = index
 
-        # Style
-        # ## Basic Colors
-        self.background_color = "rgb(200, 50, 192)"
+        # ### Default GUI Settings ### #
+        self.background_color = THEME.black
         self.border_color = THEME.normalBorderColor
-
-        # ### Theme.filepath
         # self.image = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/default.png"
         self.image = f"{THEME.filePath}default.png"
-        self.xKoordinate = 7
-        self.yKoordinate = 7
+        self.x_koordinate = size.rand
+        self.y_koordinate = size.rand
 
-        # ## Funktionsaufrufe
-        self.changeBackground()
-        self.changeImage()
+        self.setup_card_ui()
 
-        self.pushButtonKarte.setGeometry(QtCore.QRect(self.xKoordinate, self.yKoordinate, 141, 233))
-        # self.pushButtonKarte.setMinimumSize(QtCore.QSize(141, 233))
-        # self.pushButtonKarte.setMaximumSize(QtCore.QSize(141, 233))  # ??
-        self.setCardStyle()
+        # ### BUTTON CONNECT ### #
+        self.pushButtonKarte.clicked.connect(self.card_chosen)
+
+    # ##### Front-End Methods (GUI-related) ##### #
+    def setup_card_ui(self):
+        """adjusts the card Values related to the UI and sets up the Button widget"""
+        self.change_background()
+        self.change_image()
+
+        self.pushButtonKarte.setGeometry(QtCore.QRect(self.x_koordinate, self.y_koordinate, 141, 233))
+        self.set_card_style()
         self.pushButtonKarte.setObjectName("pushButtonKarte")
-        # self.layout.addWidget(self.pushButtonKarte, 0, 0)
-
-        # BUTTON AKTION
-        self.pushButtonKarte.clicked.connect(self.buttonClicked)
 
         self.pushButtonKarte.hide()
 
-    def setCardStyle(self):
+    def change_background(self):
+        """changes the default background color, which represents the card color, according to the theme"""
+        if self.color == "Blue":
+            self.background_color = THEME.blue
+        elif self.color == "Green":
+            self.background_color = THEME.green
+        elif self.color == "Yellow":
+            self.background_color = THEME.yellow
+        elif self.color == "Red":
+            self.background_color = THEME.red
+        else:
+            self.background_color = THEME.black
+
+    def change_image(self):
+        """changes the image representing the card Value to the relative picture"""
+        # ##pfad = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/"
+        self.image = f"{THEME.filePath}{self.value}.png"
+
+    def change_border(self):
+        """changes the card border to highlight playable cards"""
+        if self.playable:
+            self.border_color = THEME.playableBorderColor
+        else:
+            self.border_color = THEME.normalBorderColor
+        self.setCardStyle()
+
+    def set_card_style(self):
+        """Adjust the Button Stylesheets based on the values background-color, border_color and image"""
         self.pushButtonKarte.setStyleSheet("QPushButton {\n"
                                            f"    background-color: {self.background_color};\n"
                                            "    border-radius: 15px;\n"
@@ -789,130 +807,91 @@ class UiCard(QtWidgets.QWidget):
                                            f"    image: url({self.image});\n"
                                            "}")
 
-    def buttonClicked(self):
+    def wild_card_chosen_color_style(self):
+        """Adjusts the Card Stylesheet so the chosen color is displayed"""
+        self.change_background()
+        self.border_color = THEME.normalBorderColor
+        self.setCardStyle()
+
+    def change_geometry(self, x: int, y: int):
+        """Changes the absolute Geometry based on the given parameters
+
+        :parameter x -> int
+        :parameter y -> int"""
+        self.x_koordinate = x
+        self.y_koordinate = y
+        self.pushButtonKarte.setGeometry(QtCore.QRect(self.x_koordinate, self.y_koordinate, 141, 233))
+
+    # ##### Back-End Methods (None-GUI/No direct relation) ##### #
+    def validate_card(self, comparing_card):
+        """compares card with a given and changes playable accordingly
+
+        a card is playable when: the card is a wild card(color="Black")
+         the colors  oder values match
+        if current upcard = wild card only the color needs to be checked"""
+        skip_value = bool(comparing_card.value == "+4" or comparing_card.value == "Choice")
+
+        if self.color == "Black":
+            self.playable = True
+        elif self.color == comparing_card.color:
+            self.playable = True
+        elif not skip_value:
+            if self.value == comparing_card.value:
+                self.playable = True
+            else:
+                self.playable = False
+        else:
+            self.playable = False
+
+    # ##### Button calls ##### #
+    def card_chosen(self):
+        """tells the Game which card has been chosen"""
         print(f" Kartenindex: {self.index}")  # Test:
-        if self.spielbar:
-            # window.playCard(self.index)
+        if self.playable:
             window.game_window.playCard(self.index)
 
-    def changeBackground(self):
-        if self.farbe == "Blue":
-            self.background_color = THEME.blue
-        elif self.farbe == "Green":
-            self.background_color = THEME.green
-        elif self.farbe == "Yellow":
-            self.background_color = THEME.yellow
-        elif self.farbe == "Red":
-            self.background_color = THEME.red
-        else:
-            self.background_color = THEME.black
 
-    def changeImage(self):
-        # ##pfad = "D:/Users/Wisdom/Documents/Weiteres/Projekte/UNO/Karten/"
-        self.image = f"{THEME.filePath}{self.wert}.png"
-
-    def changeBorder(self):
-        if self.spielbar:
-            self.border_color = THEME.playableBorderColor
-            """self.pushButtonKarte.setStyleSheet("QPushButton {\n"
-                                               f"    background-color: {self.background_color};\n"
-                                               "    border-radius: 15px;\n"
-                                               "    border-width: 6px;\n"
-                                               "    border-style: solid;\n"
-                                               f"    border-color: {self.border_color};\n"
-                                               f"    image: url({self.image});\n"
-                                               "}")"""
-            self.setCardStyle()
-        else:
-            self.border_color = THEME.normalBorderColor
-            """self.pushButtonKarte.setStyleSheet("QPushButton {\n"
-                                               f"    background-color: {self.background_color};\n"
-                                               "    border-radius: 15px;\n"
-                                               "    border-width: 4px;\n"
-                                               "    border-style: solid;\n"
-                                               f"    border-color: {self.border_color};\n"
-                                               f"    image: url({self.image});\n"
-                                               "}")"""
-            self.setCardStyle()
-
-    def changeGeometry(self, x, y):
-        self.xKoordinate = x
-        self.yKoordinate = y
-        self.pushButtonKarte.setGeometry(QtCore.QRect(self.xKoordinate, self.yKoordinate, 141, 233))
-
-    def validate_card(self, vergleichs_karte):
-        if vergleichs_karte.wert == "+4" or vergleichs_karte.wert == "Wunsch":
-            if self.farbe == vergleichs_karte.farbe:
-                self.spielbar = True
-            elif self.farbe == "Black":  # braucht man?
-                self.spielbar = True
-            else:
-                self.spielbar = False
-        elif self.farbe == "Black":  # braucht man?
-            self.spielbar = True
-        elif self.farbe == vergleichs_karte.farbe:
-            self.spielbar = True
-        elif self.wert == vergleichs_karte.wert:
-            self.spielbar = True
-        else:
-            self.spielbar = False
-
-    def jokerStyle(self):
-        self.changeBackground()
-        self.pushButtonKarte.setStyleSheet("QPushButton {\n"
-                                           f"    background-color: {self.background_color};\n"
-                                           "    border-radius: 15px;\n"
-                                           "    border-width: 3px;\n"
-                                           "    border-style: solid;\n"
-                                           f"    border-color: rgb(255, 255, 255);\n"  # ###
-                                           f"    image: url({self.image});\n"
-                                           "}")
-        # self.setCardStyle(
-
-
-class Spieler:
-    def __init__(self, name, handkarten, farbe):
+class Player:
+    def __init__(self, name, hand_cards, player_color):
         self.name = name
-        self.handkarten = handkarten
-        self.farbe = farbe
+        self.hand = hand_cards
+        self.color = player_color
 
-    def draw_card(self, anzahl=7):
-        """Zieht so viele Karten von DRAW_TALON wie übergeben werden.
+    def draw_card(self, quantity=7):
+        """draws as many cars as given from global @DRAW_TALON
 
-        :parameter anzahl -> int
-        'ziehen': erste Karte von DRAW_TALON wird in 'ausgeteilt' verschoben(.append(.pop(0)))
-        gezogene Karten werden direkt den "handkarten" angehängt"""
+        :parameter quantity -> int
+        pops the first element of Draw_Talon and adds it to hand_cards"""
         global DRAW_TALON
-        ausgeteilt = []
-        for zug in range(anzahl):
-            ausgeteilt.append(DRAW_TALON.pop(0))
-        self.handkarten.extend(ausgeteilt)
-        return
+        drawn = []
+        for draw in range(quantity):
+            drawn.append(DRAW_TALON.pop(0))
+        self.hand.extend(drawn)
 
-    def validate_all_cards(self, oberste_karte: UiCard):
+    def validate_all_cards(self, upcard: UiCard):
         """checks if the player has any card which is playable
 
-        :parameter -> object of Cards
+        :parameter upcard -> object of Cards
         :return -> bool"""
-        for karte in self.handkarten:
-            karte.validate_card(oberste_karte)
-            if karte.spielbar:
+        for card in self.hand:
+            card.validate_card(upcard)
+            if card.playable:
                 return True
         return False
 
-    def spieler_fertig(self):
+    def player_finished(self):
         """check whether the player has won (has no cards)
 
         :return ->bool"""
-        if len(self.handkarten) == 0:
-            return True
+        return bool(len(self.hand) == 0)
 
     def pop(self, index: int):
-        karte = self.handkarten.pop(index)
+        karte = self.hand.pop(index)
         return karte
 
 
-class UiEndWindow(QMainWindow):
+# ### Forth 'Screen' ### #
+class UiGameOverWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MWinEnde()
@@ -921,14 +900,15 @@ class UiEndWindow(QMainWindow):
         self.titel = "UNO - The Game"
         self.icon = f'{THEME.filePath}icon.png'
 
-        self.setUp_GUI()
+        self.setup_GUI()
 
-        # ##### Button Calls ##### #
+        # ##### BUTTON CONNECT ##### #
         self.ui.pushButton_PlayAgain.clicked.connect(self.play_again)
         self.ui.pushButton_Menu.clicked.connect(self.new_game)
         self.ui.pushButton_Quit.clicked.connect(self.close)
 
-    def setUp_GUI(self):
+    # ##### Front-End Methods (GUI) ##### #
+    def setup_GUI(self):
         """sets all parts of the GUI"""
         self.set_theme()
         self.setWindowTitle(self.titel)
@@ -940,18 +920,19 @@ class UiEndWindow(QMainWindow):
         self.ui.frame_Background.setStyleSheet(THEME.gameWindowBackground_Style)
         self.ui.label_gameOverMessage.setStyleSheet(THEME.gameOverMassage_Style)
         self.ui.label_Victor.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-                                           f"color: {PLAYERS[0].farbe};")
+                                           f"color: {PLAYERS[0].color};")
 
         self.ui.frame_gameOverMenu.setStyleSheet(THEME.transparentBackground)
         self.ui.pushButton_PlayAgain.setStyleSheet(THEME.playAgainButton_Style)
         self.ui.pushButton_Menu.setStyleSheet(THEME.menu_QuitButton_Style)
         self.ui.pushButton_Quit.setStyleSheet(THEME.menu_QuitButton_Style)
 
+    # ##### Button calls ##### #
     def play_again(self):
         """lunches an new Game with existing players"""
         global PLAYERS, DRAW_TALON, PLAY_TALON
         for player in PLAYERS:
-            player.handkarten = []
+            player.hand = []
         DRAW_TALON = []
         PLAY_TALON = []
         window.start_game()

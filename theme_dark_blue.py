@@ -45,4 +45,4 @@ dark_blue.defaultPlayerColors = ["rgb(150, 129, 212)", "rgb(61, 198, 213)",
                                  "rgb(67, 190, 40)", "rgb(59, 216, 230)",
                                  "rgb(230, 198, 30)", "rgb(230, 37, 170)"
                                  ]
-dark_blue
+dark_blue.updateStyle()
