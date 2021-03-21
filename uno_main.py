@@ -85,12 +85,12 @@ class UiStartWindow(QMainWindow):
     def setUp_start_screen(self):
         """sets Settings for the first screen to appear when Programm executed"""
         self.hide_prepare_screen()
-        self.setDropShadow()
+        self.set_DropShadow()
 
-        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)       # removes window control bar
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)   # transparent background behind frame
+        self.setWindowFlag(QtCore.Qt.FramelessWindowHint)  # removes window control bar
+        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)  # transparent background behind frame
 
-    def setDropShadow(self):
+    def set_DropShadow(self):
         """adds a drop shadow to the background-frame as well as the start pushButton"""
         self.shadow.setBlurRadius(20)
         self.shadow.setXOffset(0)
@@ -155,6 +155,27 @@ class UiStartWindow(QMainWindow):
         THEME.defaultPlayerColors.append(THEME.defaultPlayerColors.pop(0))
         self.ui.lineEdit_EnterName.clear()
 
+    def start_game(self):
+        """opens a new Window, initializing the game"""
+        self.game_window = UiMainGameWindow()
+        self.game_window.show()
+
+        self.close()
+
+    def display_missing_players(self):
+        """displays a Massage saying how many names were entert and how many need to be added"""
+        self.ui.frame_PlayerQuantity.show()
+        self.ui.frame_PlayerEntry.show()
+        self.ui.label_Result.show()
+
+        self.ui.label_Entry.setText(f"Spieler {self.player_counter}:")
+        if len(PLAYERS) == 0:
+            self.ui.label_Result.setText(f"Zu wenig Spieler! Noch kein Spielername eingegeben. \n"
+                                         f"Es fehlen noch: {self.ui.spinBox_Quantity.value()-len(PLAYERS)} Namen")
+        else:
+            self.ui.label_Result.setText(f"Zu wenig Spieler! Nur {len(PLAYERS)} Spielername(n) eingegeben.\n"
+                                         f"Es fehlen noch: {self.ui.spinBox_Quantity.value()-len(PLAYERS)} Namen")
+
     # ##### Button calls ##### #
     def startPushed(self):
         """switches from start-screen to prepare_screen"""
@@ -192,20 +213,9 @@ class UiStartWindow(QMainWindow):
         if all players created: open Game-Window
         if not: display how many Players are created, show Entry-fields"""
         if len(PLAYERS) == self.ui.spinBox_Quantity.value():
-            self.game_window = UiMainGameWindow()
-            self.game_window.show()
-
-            self.close()
+            self.start_game()
         else:
-            self.ui.frame_PlayerQuantity.show()
-            self.ui.frame_PlayerEntry.show()
-            self.ui.label_Result.show()
-
-            self.ui.label_Entry.setText(f"Spieler {self.player_counter}:")
-            if len(PLAYERS) == 0:
-                self.ui.label_Result.setText(f"Zu wenig Spieler! Noch kein Spielername eingegeben.")
-            else:
-                self.ui.label_Result.setText(f"Zu wenig Spieler! Nur {len(PLAYERS)} Spielername(n) eingegeben.")
+            self.display_missing_players()
 
     def change_theme(self):
         """changes the Theme when Button is clicked"""
@@ -286,7 +296,6 @@ class UiMainGameWindow(QMainWindow):
         self.ui.pushButtonGelb.clicked.connect(self.colorYellow)
         self.ui.pushButtoRot.clicked.connect(self.colorRed)
 
-
     def setTheme(self):
         # Frames
         self.ui.frameHintergrund.setStyleSheet(THEME.gameWindowBackground_Style)
@@ -353,7 +362,7 @@ class UiMainGameWindow(QMainWindow):
             PLAY_TALON.append(DRAW_TALON.pop(0))
         self.setPlayTalonStyle()
 
-    def setUpHandkarten(self):   # ### rename
+    def setUpHandkarten(self):  # ### rename
         # SetUp Handkarten - Frame
         self.setFrameSize(self.kartenanzahl)
         self.setFrameBorder()
@@ -724,7 +733,7 @@ class UiMainGameWindow(QMainWindow):
         """ erstellt Joker_Karten +4 und 'Wunsch', jede Karte gibt es vier mal"""  # "wish" or "Choice"
         karten = []
         for i in range(4):
-            karten.append(UiCard("Black", "+4",  fenster=self.ui.frame_Handkarten, spielbar=True))
+            karten.append(UiCard("Black", "+4", fenster=self.ui.frame_Handkarten, spielbar=True))
             karten.append(UiCard("Black", "Wunsch", fenster=self.ui.frame_Handkarten, spielbar=True))
         return karten
 
@@ -732,7 +741,7 @@ class UiMainGameWindow(QMainWindow):
 # ### Forth 'Screen' ### #
 class UiCard(QtWidgets.QWidget):
 
-    def __init__(self, farbe, wert,  fenster, spielbar=False, index=None, *args, **kwargs):
+    def __init__(self, farbe, wert, fenster, spielbar=False, index=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fenster = fenster
         self.pushButtonKarte = QtWidgets.QPushButton(fenster)
@@ -909,52 +918,58 @@ class UiEndWindow(QMainWindow):
         self.ui = Ui_MWinEnde()
         self.ui.setupUi(self)
 
-        self.setTheme()
-
         self.titel = "UNO - The Game"
         self.icon = f'{THEME.filePath}icon.png'
 
+        self.setUp_GUI()
+
+        # ##### Button Calls ##### #
+        self.ui.pushButton_PlayAgain.clicked.connect(self.play_again)
+        self.ui.pushButton_Menu.clicked.connect(self.new_game)
+        self.ui.pushButton_Quit.clicked.connect(self.close)
+
+    def setUp_GUI(self):
+        """sets all parts of the GUI"""
+        self.set_theme()
         self.setWindowTitle(self.titel)
         self.setWindowIcon(QtGui.QIcon(self.icon))
-        self.ui.labelGewinner.setText(f"<strong>{VICTOR}</strong> hat gewonnen")
+        self.ui.label_Victor.setText(f"<strong>{VICTOR}</strong> hat gewonnen")
 
-        self.ui.pushButtonPlayAgain.clicked.connect(self.play_again)
-        self.ui.pushButtonMenu.clicked.connect(self.menu)
-        self.ui.pushButtonQuit.clicked.connect(self.close)
+    def set_theme(self):
+        """adjust all GUI parts to the currently selected Theme"""
+        self.ui.frame_Background.setStyleSheet(THEME.gameWindowBackground_Style)
+        self.ui.label_gameOverMessage.setStyleSheet(THEME.gameOverMassage_Style)
+        self.ui.label_Victor.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
+                                           f"color: {PLAYERS[0].farbe};")
 
-    def setTheme(self):
-        self.ui.frame.setStyleSheet(THEME.windowBackground_Style)
-        self.ui.labelSpielende.setStyleSheet(THEME.gameOverMassage_Style)
-        self.ui.labelGewinner.setStyleSheet("background-color: rgba(255, 255, 255, 0);\n"
-                                            f"color: {PLAYERS[0].farbe};")
-        self.ui.pushButtonMenu.setStyleSheet(THEME.menu_QuitButton_Style)
-        self.ui.pushButtonQuit.setStyleSheet(THEME.menu_QuitButton_Style)
-        self.ui.pushButtonPlayAgain.setStyleSheet(THEME.playAgainButton_Style)
-        self.ui.frame_2.setStyleSheet(THEME.transparentBackground)
+        self.ui.frame_gameOverMenu.setStyleSheet(THEME.transparentBackground)
+        self.ui.pushButton_PlayAgain.setStyleSheet(THEME.playAgainButton_Style)
+        self.ui.pushButton_Menu.setStyleSheet(THEME.menu_QuitButton_Style)
+        self.ui.pushButton_Quit.setStyleSheet(THEME.menu_QuitButton_Style)
 
     def play_again(self):
+        """lunches an new Game with existing players"""
         global PLAYERS, DRAW_TALON, PLAY_TALON
         for player in PLAYERS:
             player.handkarten = []
         DRAW_TALON = []
         PLAY_TALON = []
-        # ##self.neuesSpiel = UiSpielFenster()
-        # ##self.neuesSpiel.show()
-        window.weiterPushed()
+        window.start_game()
 
         self.close()
 
-    def menu(self):
+    def new_game(self):
+        """opens the entry menu to start a game with new players"""
         global DRAW_TALON, PLAY_TALON, PLAYERS
-        window.reset_entry()
+        window.reset_entries()
         DRAW_TALON = []
         PLAY_TALON = []
-
         window.show()
 
         self.close()
 
     def quit(self):
+        """ends the Application"""
         self.close()
 
 

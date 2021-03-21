@@ -28,11 +28,10 @@
      <number>5</number>
     </property>
     <item>
-     <widget class="QFrame" name="frame">
+     <widget class="QFrame" name="frame_Background">
       <property name="styleSheet">
        <string notr="true">QFrame {
 	background-color: rgb(217, 198, 255);
-	border-radius: 15px;
 }
 </string>
       </property>
@@ -42,12 +41,12 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QFrame" name="frame_2">
+      <widget class="QFrame" name="frame_gameOverMenu">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>5</x>
          <y>310</y>
-         <width>981</width>
+         <width>990</width>
          <height>68</height>
         </rect>
        </property>
@@ -72,10 +71,10 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonPlayAgain">
+         <widget class="QPushButton" name="pushButton_PlayAgain">
           <property name="minimumSize">
            <size>
-            <width>160</width>
+            <width>165</width>
             <height>50</height>
            </size>
           </property>
@@ -113,10 +112,10 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonMenu">
+         <widget class="QPushButton" name="pushButton_Menu">
           <property name="minimumSize">
            <size>
-            <width>160</width>
+            <width>165</width>
             <height>50</height>
            </size>
           </property>
@@ -133,7 +132,7 @@
 }</string>
           </property>
           <property name="text">
-           <string>Start</string>
+           <string>Neues Spiel</string>
           </property>
          </widget>
         </item>
@@ -154,10 +153,10 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButtonQuit">
+         <widget class="QPushButton" name="pushButton_Quit">
           <property name="minimumSize">
            <size>
-            <width>160</width>
+            <width>165</width>
             <height>50</height>
            </size>
           </property>
@@ -193,10 +192,10 @@
         </item>
        </layout>
       </widget>
-      <widget class="QLabel" name="labelSpielende">
+      <widget class="QLabel" name="label_gameOverMessage">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>5</x>
          <y>150</y>
          <width>1000</width>
          <height>51</height>
@@ -221,10 +220,10 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLabel" name="labelGewinner">
+      <widget class="QLabel" name="label_Victor">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>5</x>
          <y>220</y>
          <width>1000</width>
          <height>50</height>
