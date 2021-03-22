@@ -11,8 +11,7 @@ from theme_development import developer
 from theme_dark_blue import dark_blue
 from theme_class import default, size
 
-"Handkartenframe wird nicht angezeigt"
-"Pfad als Relation vom Projekt ordner"
+"to-do: Pfad als Relation vom Projekt ordner"
 # ### GLOBALS ### #
 COLORS = ["Blue", "Green", "Yellow", "Red"]
 VALUES = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -22,7 +21,7 @@ PLAYERS = []
 VICTOR = None
 
 # Basic Start Theme
-THEME = default
+THEME = dark_blue
 
 
 # ##### Front-End Methods (GUI) ##### #
