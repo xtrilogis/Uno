@@ -269,6 +269,7 @@ class UiMainGameWindow(QMainWindow):
         self.can_choose_a_card = True   # Only changes if color for wild card needs to be chosen
 
         self.pre_start()
+        self.start_turn()
 
         # ## BUTTON AKTIONEN ## #
         self.ui.pushButton_Draw_Talon.clicked.connect(self.draw_card_from_Draw_Talon)
@@ -296,7 +297,7 @@ class UiMainGameWindow(QMainWindow):
         self.ui.label_current_player.setText(self.player.name)
         self.adjust_color_to_player_color()
         self.adjust_frame_player_hand(quantity=len(hand_cards))
-        self.position_and_update_hand_cards(hand_cards[:12])
+        self.position_and_update_cards(hand_cards[:12])
 
     # ### Methods that hide and show stuff ### #
     def hide_unnecessary(self):
@@ -460,7 +461,7 @@ class UiMainGameWindow(QMainWindow):
         self.set_draw_talon_style()
 
         print("~ Setup completed ~")
-        print(f"Karten von {PLAYERS[0].name} | {self.kartenanzahl}")
+        print(f"Karten von {PLAYERS[0].name} | {len(current_hand)}")
 
     def discard_chosen_card(self, index: int):
         """hides players cards, moves chosen card from player.hand to new upcard
@@ -500,7 +501,7 @@ class UiMainGameWindow(QMainWindow):
                 else:
                     self.play_order()
 
-                self.endTurn()
+                self.end_turn()
 
     def draw_card_from_Draw_Talon(self):
         if self.can_choose_a_card:
@@ -567,7 +568,7 @@ class UiMainGameWindow(QMainWindow):
         ende = []
         for spieler, _ in enumerate(PLAYERS):
             ende.append(PLAYERS[spieler].player_finished)
-        return (True in ende)
+        return True in ende
 
     # ##### CARDS ##### #
     # ### Methods generating cards ### #
@@ -666,21 +667,21 @@ class UiMainGameWindow(QMainWindow):
         self.set_play_talon_style()
 
         self.hide_player_cards()
-        self.ui.frame_wild_color_choice.hide()  # ## necessary
+        # self.ui.frame_wild_color_choice.hide()  # ## necessary
         self.can_choose_a_card = True
 
         self.check_uno()
         self.play_order()
-        self.endTurn()
+        self.end_turn()
 
     # ##### Button calls ##### #
     def player_skips(self):
         """ hides player cards and finishes the turn
 
         player choose not to play a card nor to draw again"""
-        self.karten_hide(self.handkarten)
+        self.hide_player_cards()
         self.play_order()
-        self.endTurn()
+        self.end_turn()
 
     def uno_button_clicked(self):
         """saves if player clicked the uno-Button and changes the stylesheet"""
@@ -695,15 +696,14 @@ class UiMainGameWindow(QMainWindow):
         which can be seen by clicking the Button"""
         self.hide_player_cards()
 
-        if self.number_of_shown_set == 1:
+        if self.number_of_shown_card_set == 1:
             self.number_of_shown_card_set = 2
-            spare_cards = self.player.hand[12:]  # ## test [12:24]
-            if len(spare_cards) <= 24:
-                self.ui.pushButton_next_card_set.hide()
+            spare_cards = self.player.hand[12:24]  # ## test [12:24]
+            self.show_necessary()
         else:
             self.number_of_shown_card_set = 3
             spare_cards = self.player.hand[24:]
-            self.ui.pushButton_next_card_set.hide()
+            self.show_necessary()
 
         self.adjust_frame_player_hand(quantity=len(spare_cards))
         self.position_and_update_cards(cards=spare_cards)
@@ -717,16 +717,14 @@ class UiMainGameWindow(QMainWindow):
         clicking the last_set Button shows the previous cards"""
         self.hide_player_cards()
 
-        if self.number_of_shown_set == 2:
+        if self.number_of_shown_card_set == 2:
             self.number_of_shown_card_set = 1
-            spare_cards = self.player.hand[12:]  # ## test [12:24]
-            self.ui.pushButton_last_card_set.hide()
-            self.ui.pushButton_next_card_set.show()
+            spare_cards = self.player.hand[:12]  # ## test [12:24]
+            self.show_necessary()
         else:  # self.number... = 3
             self.number_of_shown_card_set = 3
-            spare_cards = self.player.hand[24:]
-            self.ui.pushButton_last_card_set.show()
-            self.ui.pushButton_next_card_set.show()
+            spare_cards = self.player.hand[12:24]
+            self.show_necessary()
 
         self.adjust_frame_player_hand(quantity=len(spare_cards))
         self.position_and_update_cards(cards=spare_cards)
@@ -794,7 +792,7 @@ class UiCard(QtWidgets.QWidget):
             self.border_color = THEME.playableBorderColor
         else:
             self.border_color = THEME.normalBorderColor
-        self.setCardStyle()
+        self.set_card_style()
 
     def set_card_style(self):
         """Adjust the Button Stylesheets based on the values background-color, border_color and image"""
@@ -811,7 +809,7 @@ class UiCard(QtWidgets.QWidget):
         """Adjusts the Card Stylesheet so the chosen color is displayed"""
         self.change_background()
         self.border_color = THEME.normalBorderColor
-        self.setCardStyle()
+        self.set_card_style()
 
     def change_geometry(self, x: int, y: int):
         """Changes the absolute Geometry based on the given parameters
@@ -848,7 +846,7 @@ class UiCard(QtWidgets.QWidget):
         """tells the Game which card has been chosen"""
         print(f" Kartenindex: {self.index}")  # Test:
         if self.playable:
-            window.game_window.playCard(self.index)
+            window.game_window.discard_chosen_card(self.index)
 
 
 class Player:
@@ -886,8 +884,8 @@ class Player:
         return bool(len(self.hand) == 0)
 
     def pop(self, index: int):
-        karte = self.hand.pop(index)
-        return karte
+        card = self.hand.pop(index)
+        return card
 
 
 # ### Forth 'Screen' ### #
