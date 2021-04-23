@@ -7,7 +7,6 @@ from ui_prepare_screen import *
 from ui_main_game_window import *
 from ui_game_over_screen import *
 
-from theme_development import developer
 from theme_dark_blue import dark_blue
 from theme_class import default, size
 
@@ -226,8 +225,6 @@ class UiStartWindow(QMainWindow):
         """changes the Theme when Button is clicked"""
         global THEME
         if THEME == dark_blue:
-            THEME = developer
-        elif THEME == developer:
             THEME = default
         else:
             THEME = dark_blue

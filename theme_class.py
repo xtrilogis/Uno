@@ -26,33 +26,33 @@ class ColorTheme:
 
         # ## COLORS ## #
         # Basics
-        self.buttonColorBasic = "rgb(195, 195, 195)"
-        self.buttonColorActive = "rgb(195, 195, 195)"
-        self.buttonColorPassive = "rgb(195, 195, 195)"
-        self.buttonColorFocus = "rgb(195, 195, 195)"
+        self.buttonColorBasic = "rgb(181, 181, 181)"
+        self.buttonColorActive = "rgb(108, 108, 108)"
+        self.buttonColorPassive = "rgb(206, 206, 206)"
+        self.buttonColorFocus = "rgb(117, 117, 117)"
 
         # First 'Screen'
-        self.titleColor = "rgb(108, 108, 108)"
-        self.subtitleColor = "rgb(108, 108, 108)"
-        self.infoLabelColor = "rgb(108, 108, 108)"
+        self.titleColor = "rgb(138, 138, 138)"
+        self.subtitleColor = "rgb(177, 177, 177)"
+        self.infoLabelColor = "rgb(148, 148, 148)"
 
         # Second 'Screen'
         self.entryButtonColor = "rgb(155, 182, 193)"
-        self.entrySpinBoxColor = "rgb(108, 108, 108)"
-        self.entryLineEditColor = "rgb(108, 108, 108)"
+        self.entrySpinBoxColor = "rgb(131, 147, 177)"
+        self.entryLineEditColor = "rgb(131, 147, 177)"
         self.entryLabelColor = "rgb(108, 108, 108)"
-        self.entryCustomPlayerColor = "rgb(108, 108, 108)"
+        self.entryCustomPlayerColor = "rgb(122, 144, 152)"
 
         # Third 'Screen' | Main Window
         # ## Card Colors
-        self.blue = "rgb(31, 11, 255)"
-        self.red = "rgb(255, 2, 2)"
-        self.green = "rgb(73, 255, 7)"
-        self.yellow = "rgb(255, 255, 8)"
+        self.blue = "rgb(125, 177, 255)"
+        self.red = "rgb(255, 165, 138)"
+        self.green = "rgb(148, 222, 130)"
+        self.yellow = "rgb(225, 214, 7)"
         self.black = "rgb(141, 137, 156)"
 
         # ## Card Border Colors
-        self.normalBorderColor = "rgb(155, 182, 193)"
+        self.normalBorderColor = "rgb(255, 255, 255)"
         self.playableBorderColor = "rgb(108, 108, 108)"
 
         # ## Directory for Card-Value Pictures
